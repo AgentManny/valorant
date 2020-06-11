@@ -1,0 +1,4 @@
+name: Valorant
+main: gg.manny.valorant.Valorant
+version: ${git.commit.id.abbrev}
+commands:
