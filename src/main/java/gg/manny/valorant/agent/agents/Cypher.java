@@ -11,7 +11,7 @@ public class Cypher extends Agent {
 
     @Override
     public ChatColor getColor() {
-        return ChatColor.GRAY;
+        return ChatColor.YELLOW;
     }
 
     @Override
