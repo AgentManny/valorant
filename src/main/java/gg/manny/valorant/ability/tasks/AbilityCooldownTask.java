@@ -35,7 +35,7 @@ public class AbilityCooldownTask extends BukkitRunnable {
                 Slot slot = HotbarApi.getCurrentHotbar(player).getSlot(abilitySlot);
 
                 int timer = entry.getValue();
-                if (--timer < 1) {
+                if (timer < 1) {
                     slot.setItem(ability.getItem());
                     player.getInventory().setItem(abilitySlot, slot.getItem()); // Updates it, since Slot#setItem doesn't
 
@@ -49,9 +49,8 @@ public class AbilityCooldownTask extends BukkitRunnable {
                     );
                     player.getInventory().setItem(ability.getSlot(), slot.getItem());
                     player.updateInventory();
-
-                    player.sendMessage("Debug: You have " + timer + " left on your cooldown.");
-                    abilityManager.getPlayerCooldowns().put(playerId, ability, timer);
+                    
+                    abilityManager.getPlayerCooldowns().put(playerId, ability, --timer);
                 }
             }
         }
