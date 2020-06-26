@@ -25,6 +25,8 @@ public class Sage extends Agent {
 
     @Override
     public String description() {
-        return "I don't have a description.";
+        return "The bastion of China, Sage creates safety for herself and her team wherever she goes. " +
+                "Able to revive fallen friends and stave off forceful assaults, " +
+                "she provides a calm center to a hellish battlefield.";
     }
 }
