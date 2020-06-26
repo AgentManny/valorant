@@ -2,6 +2,7 @@ package gg.manny.valorant.ability.cypher;
 
 import gg.manny.valorant.ability.Ability;
 import org.bukkit.ChatColor;
+import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

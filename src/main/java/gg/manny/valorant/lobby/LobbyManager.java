@@ -2,6 +2,7 @@ package gg.manny.valorant.lobby;
 
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.agent.menu.AgentSelector;
+import gg.manny.valorant.game.menu.TeamMenu;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.ingot.Hotbar;
@@ -23,11 +24,19 @@ public class LobbyManager {
     }
 
     private void loadHotbars() {
-        Slot slot = SELECT_HOTBAR.getSlot(4);
-        slot.setItem(new ItemStack(Material.COMPASS));
+        Slot slot = SELECT_HOTBAR.getSlot(1);
+        slot.setItem(new ItemStack(Material.BOOK));
         slot.setActionHandler((player, action) -> {
             if (action.getType().isRightClick()) {
                 new AgentSelector().openMenu(player);
+            }
+        });
+
+        slot = SELECT_HOTBAR.getSlot(0);
+        slot.setItem(new ItemStack(Material.CLOCK));
+        slot.setActionHandler((player, action) -> {
+            if (action.getType().isRightClick()) {
+                new TeamMenu().openMenu(player);
             }
         });
     }

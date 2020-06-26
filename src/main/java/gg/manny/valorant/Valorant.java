@@ -2,6 +2,8 @@ package gg.manny.valorant;
 
 import gg.manny.valorant.ability.AbilityManager;
 import gg.manny.valorant.agent.AgentManager;
+import gg.manny.valorant.game.Game;
+import gg.manny.valorant.listener.GameListener;
 import gg.manny.valorant.listener.ItemListener;
 import gg.manny.valorant.listener.PlayerListener;
 import gg.manny.valorant.lobby.LobbyManager;
@@ -21,6 +23,8 @@ public class Valorant extends JavaPlugin {
 
     private static Valorant instance;
 
+    private Game game;
+
     private AgentManager agentManager;
     private AbilityManager abilityManager;
 
@@ -30,12 +34,15 @@ public class Valorant extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        game = new Game(this);
+
         agentManager = new AgentManager();
         abilityManager = new AbilityManager(this);
 
         lobbyManager = new LobbyManager(this);
 
         Arrays.asList(
+                new GameListener(game),
                 new PlayerListener(),
                 new ItemListener(),
                 new HotbarFunctionListener()
