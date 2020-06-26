@@ -1,12 +1,16 @@
 package gg.manny.valorant.agent.agents;
 
+import gg.manny.valorant.ability.cypher.NeuralTheft;
 import gg.manny.valorant.agent.Agent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public class Cypher extends Agent {
+
     public Cypher() {
         super("Cypher", AgentCategory.SENTINEL);
+
+        this.abilities.add(new NeuralTheft());
     }
 
     @Override

@@ -1,13 +1,9 @@
 package gg.manny.valorant.lobby;
 
 import gg.manny.valorant.Valorant;
-import gg.manny.valorant.agent.Agent;
 import gg.manny.valorant.agent.menu.AgentSelector;
-import gg.manny.valorant.util.ItemBuilder;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.ipvp.ingot.ActionHandler;
 import org.ipvp.ingot.Hotbar;
 import org.ipvp.ingot.Slot;
 import org.ipvp.ingot.type.VanillaHotbar;
