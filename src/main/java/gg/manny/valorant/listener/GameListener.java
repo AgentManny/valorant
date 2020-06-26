@@ -15,11 +15,13 @@ public class GameListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         game.onPlayerConnect(event.getPlayer());
+        event.setJoinMessage(null);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         game.onPlayerDisconnect(event.getPlayer());
+        event.setQuitMessage(null);
     }
 
 
