@@ -1,6 +1,6 @@
 package gg.manny.valorant.agent;
 
-import gg.manny.valorant.agent.agents.Sage;
+import gg.manny.valorant.agent.agents.*;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,17 @@ public class AgentManager {
 
     public AgentManager() {
         agents.addAll(Arrays.asList(
-                new Sage()
+                new Sage(),
+                new Omen(),
+                new Jett(),
+                new Breach(),
+                new Brimstone(),
+                new Cypher(),
+                new Raze(),
+                new Reyna(),
+                new Viper(),
+                new Sova(),
+                new Phoenix()
         ));
     }
 
