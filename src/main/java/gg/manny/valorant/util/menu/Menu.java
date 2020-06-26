@@ -4,6 +4,7 @@ import gg.manny.valorant.Valorant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import net.minecraft.server.v1_15_R1.Containers;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -58,7 +59,7 @@ public abstract class Menu {
         if (openInventoryMethod == null) {
             try {
 
-                openInventoryMethod = CraftHumanEntity.class.getDeclaredMethod("openCustomInventory", Inventory.class, EntityPlayer.class, String.class);
+                openInventoryMethod = CraftHumanEntity.class.getDeclaredMethod("openCustomInventory", Inventory.class, EntityPlayer.class, Containers.class);
                 openInventoryMethod.setAccessible(true);
             } catch (NoSuchMethodException ex) {
                 ex.printStackTrace();
@@ -71,7 +72,31 @@ public abstract class Menu {
         EntityPlayer ep = ((CraftPlayer) player).getHandle();
         Inventory inv = this.createInventory(player);
         try {
-            getOpenInventoryMethod().invoke(player, inv, ep, "minecraft:chest");
+            Containers customSize;
+            switch(inv.getSize()) {
+                case 9:
+                    customSize = Containers.GENERIC_9X1;
+                    break;
+                case 18:
+                    customSize = Containers.GENERIC_9X2;
+                    break;
+                case 27:
+                    customSize = Containers.GENERIC_9X3;
+                    break;
+                case 36:
+                case 41:
+                    customSize = Containers.GENERIC_9X4;
+                    break;
+                case 45:
+                    customSize = Containers.GENERIC_9X5;
+                    break;
+                case 54:
+                    customSize = Containers.GENERIC_9X6;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported custom inventory size " + inv.getSize());
+            }
+            getOpenInventoryMethod().invoke(player, inv, ep, customSize);
             this.update(player);
         } catch (Exception ex) {
             ex.printStackTrace();
