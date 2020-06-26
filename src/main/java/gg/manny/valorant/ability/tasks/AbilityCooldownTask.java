@@ -49,7 +49,7 @@ public class AbilityCooldownTask extends BukkitRunnable {
                     );
                     player.getInventory().setItem(ability.getSlot(), slot.getItem());
                     player.updateInventory();
-                    
+
                     abilityManager.getPlayerCooldowns().put(playerId, ability, --timer);
                 }
             }

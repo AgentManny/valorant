@@ -4,7 +4,6 @@ import gg.manny.valorant.Valorant;
 import gg.manny.valorant.agent.Agent;
 import gg.manny.valorant.util.ItemBuilder;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.ingot.ActionHandler;
 import org.ipvp.ingot.Hotbar;
@@ -29,8 +28,8 @@ public class LobbyManager {
         int i = 0;
         for (Agent agent : plugin.getAgentManager().getAgents()) {
             Slot slot = SELECT_HOTBAR.getSlot(i);
-            ItemStack icon = new ItemBuilder(agent.icon())
-                    .name(agent.color() + agent.getName())
+            ItemStack icon = new ItemBuilder(agent.getIcon())
+                    .name(agent.getColor() + agent.getName())
                     .create();
             slot.setItem(icon);
             slot.setActionHandler((player, action) -> {

@@ -1,6 +1,7 @@
 package gg.manny.valorant.ability.sage;
 
 import gg.manny.valorant.ability.Ability;
+import gg.manny.valorant.util.ParticleEffect;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,13 +42,12 @@ public class HealingOrb extends Ability {
         //Player lookingAt = PlayerUtil.getPlayerByEyeLocation(player, 12);
         Player lookingAt = player;
         if (lookingAt != null) {
-            Location playerLoc = player.getLocation();
+            Location playerLoc = player.getLocation().clone();
             int radius = 2;
             for (double y = 0; y <= player.getLocation().getBlockY() + 2; y += 0.05) {
                 double x = radius * Math.cos(y);
                 double z = radius * Math.sin(y);
-//                PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.ENCHANTMENT_TABLE, true, (float) (playerLoc.getX() + x), (float) (playerLoc.getY() + y), (float) (playerLoc.getZ() + z), 0, 0, 0, 0, 1);
-//                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                ParticleEffect.ENCHANTMENT_TABLE.send(playerLoc.add(x, 0, z), 1, 2);
             }
         }
     }

@@ -1,6 +1,7 @@
 package gg.manny.valorant.agent;
 
 import gg.manny.valorant.ability.Ability;
+import gg.manny.valorant.util.ItemBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
@@ -21,13 +22,18 @@ public abstract class Agent {
 
     private final String name;
     private final AgentCategory type;
+
     protected List<Ability> abilities = new ArrayList<>();
 
-    public abstract ChatColor color();
+    public String getDisplayName() {
+        return this.getColor() + this.name;
+    }
 
-    public abstract Material icon();
+    public abstract ChatColor getColor();
 
-    public abstract String description();
+    public abstract Material getIcon();
+
+    public abstract String getDescription();
 
     public void activate(Player player) {
         Hotbar hotbar = new VanillaHotbar();
@@ -51,6 +57,13 @@ public abstract class Agent {
 
     public void deactivate(Player player) {
         HotbarApi.setCurrentHotbar(player, null);
+    }
+
+    public ItemStack getItem() {
+        return new ItemBuilder(getIcon())
+                .name(getDisplayName())
+                .lore(ItemBuilder.wrap(getDescription(), ChatColor.GRAY.toString(), 45))
+                .create();
     }
 
     public enum AgentCategory {

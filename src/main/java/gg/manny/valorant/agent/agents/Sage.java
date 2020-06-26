@@ -14,17 +14,17 @@ public class Sage extends Agent {
     }
 
     @Override
-    public ChatColor color() {
+    public ChatColor getColor() {
         return ChatColor.DARK_AQUA;
     }
 
     @Override
-    public Material icon() {
+    public Material getIcon() {
         return Material.HEART_OF_THE_SEA;
     }
 
     @Override
-    public String description() {
+    public String getDescription() {
         return "The bastion of China, Sage creates safety for herself and her team wherever she goes. " +
                 "Able to revive fallen friends and stave off forceful assaults, " +
                 "she provides a calm center to a hellish battlefield.";
