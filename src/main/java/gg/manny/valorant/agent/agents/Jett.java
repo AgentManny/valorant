@@ -16,7 +16,7 @@ public class Jett extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.TRIDENT;
+        return Material.VEX_SPAWN_EGG;
     }
 
     @Override

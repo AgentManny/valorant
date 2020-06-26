@@ -26,7 +26,7 @@ public class Sage extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.HEART_OF_THE_SEA;
+        return Material.DOLPHIN_SPAWN_EGG;
     }
 
     @Override

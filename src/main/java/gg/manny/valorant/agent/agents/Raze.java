@@ -16,7 +16,7 @@ public class Raze extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.FIRE_CHARGE;
+        return Material.GUARDIAN_SPAWN_EGG;
     }
 
     @Override

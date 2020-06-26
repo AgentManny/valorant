@@ -16,7 +16,7 @@ public class Viper extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.SCUTE;
+        return Material.CREEPER_SPAWN_EGG;
     }
 
     @Override

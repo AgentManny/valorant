@@ -16,7 +16,7 @@ public class Reyna extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.CHORUS_FLOWER;
+        return Material.PILLAGER_SPAWN_EGG;
     }
 
     @Override
