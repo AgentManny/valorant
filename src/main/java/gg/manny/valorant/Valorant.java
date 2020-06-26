@@ -12,10 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.ingot.HotbarFunctionListener;
 
 import java.util.Arrays;
+import java.util.Random;
 
 @Getter
 public class Valorant extends JavaPlugin {
-    
+
+    public static final Random RANDOM = new Random();
+
     private static Valorant instance;
 
     private AgentManager agentManager;
@@ -27,7 +30,7 @@ public class Valorant extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        agentManager = new AgentManager(this);
+        agentManager = new AgentManager();
         abilityManager = new AbilityManager(this);
 
         lobbyManager = new LobbyManager(this);

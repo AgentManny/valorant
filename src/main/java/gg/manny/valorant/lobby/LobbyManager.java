@@ -15,7 +15,7 @@ public class LobbyManager {
     public static Hotbar SELECT_HOTBAR = new VanillaHotbar();
 
     private final Valorant plugin;
-
+    
     public LobbyManager(Valorant plugin) {
         this.plugin = plugin;
 
