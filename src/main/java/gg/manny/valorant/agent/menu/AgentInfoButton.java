@@ -6,7 +6,9 @@ import gg.manny.valorant.agent.Agent;
 import gg.manny.valorant.util.ItemBuilder;
 import gg.manny.valorant.util.menu.Button;
 import org.bukkit.ChatColor;
+import org.bukkit.EntityEffect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -46,7 +48,10 @@ public class AgentInfoButton extends Button {
     @Override
     public void clicked(Player player, int slot, ClickType clickType) {
         Valorant.getInstance().getAgentManager().setAgent(player, agent);
-        player.sendMessage(ChatColor.GRAY + "You have chosen " + ChatColor.RED + agent.getName());
+        player.sendMessage(ChatColor.GRAY + "Your agent is now " + agent.getColor().toString() + agent.getName());
         player.closeInventory();
+        player.sendTitle(agent.getColor().toString() + agent.getName(), ChatColor.GRAY + "Selected. " , 10, 30, 10);
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+
     }
 }

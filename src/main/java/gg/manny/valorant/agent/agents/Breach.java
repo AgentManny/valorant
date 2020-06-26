@@ -16,7 +16,7 @@ public class Breach extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.ZOMBIE_VILLAGER_SPAWN_EGG;
+        return Material.ANVIL;
     }
 
     @Override

@@ -16,7 +16,7 @@ public class Phoenix extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.CHICKEN_SPAWN_EGG;
+        return Material.CAMPFIRE;
     }
 
     @Override
