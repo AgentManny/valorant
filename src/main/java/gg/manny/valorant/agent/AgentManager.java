@@ -9,22 +9,22 @@ import java.util.*;
 @Getter
 public class AgentManager {
 
-    private Set<Agent> agents = new HashSet<>();
+    private Set<Agent> agents = new LinkedHashSet<>();
     private Map<UUID, Agent> playerAgents = new HashMap<>();
 
     public AgentManager() {
         agents.addAll(Arrays.asList(
-                new Sage(),
-                new Omen(),
                 new Jett(),
-                new Breach(),
-                new Brimstone(),
-                new Cypher(),
                 new Raze(),
-                new Reyna(),
-                new Viper(),
+                new Breach(),
+                new Omen(),
+                new Brimstone(),
+                new Phoenix(),
+                new Sage(),
                 new Sova(),
-                new Phoenix()
+                new Viper(),
+                new Cypher(),
+                new Reyna()
         ));
     }
 

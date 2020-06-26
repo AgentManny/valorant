@@ -27,7 +27,7 @@ public class Valorant extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        agentManager = new AgentManager(this);
+        agentManager = new AgentManager();
         abilityManager = new AbilityManager(this);
 
         lobbyManager = new LobbyManager(this);
