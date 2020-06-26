@@ -27,7 +27,7 @@ public class Valorant extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        agentManager = new AgentManager();
+        agentManager = new AgentManager(this);
         abilityManager = new AbilityManager(this);
 
         lobbyManager = new LobbyManager(this);
@@ -38,7 +38,7 @@ public class Valorant extends JavaPlugin {
                 new HotbarFunctionListener()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
-        MScoreboardHandler.init(new GameSidebar());
+        MScoreboardHandler.init(new GameSidebar(this));
     }
 
     @Override

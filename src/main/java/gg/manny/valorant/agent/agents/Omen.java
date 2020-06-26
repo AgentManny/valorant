@@ -6,7 +6,6 @@ import org.bukkit.Material;
 
 public class Omen extends Agent {
 
-
     public Omen() {
         super("Omen", AgentCategory.CONTROLLER);
     }

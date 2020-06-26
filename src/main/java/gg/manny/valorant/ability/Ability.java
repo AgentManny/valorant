@@ -14,7 +14,9 @@ import org.ipvp.ingot.HotbarAction;
 @AllArgsConstructor
 public abstract class Ability {
 
-    private String name;
+    private final String name;
+    private final AbilityType type;
+
     private ChatColor color;
 
     public String getDisplayName() {
@@ -25,11 +27,17 @@ public abstract class Ability {
         return AbilityPrice.FREE;
     }
 
+    public int getCost() {
+        return 0;
+    }
+
     public abstract Material getIcon();
 
     public abstract String getDescription();
 
-    public abstract int getCooldown();
+    public int getCooldown() {
+        return 0;
+    }
 
     public abstract int getSlot();
 
@@ -38,7 +46,9 @@ public abstract class Ability {
     }
 
     public void addCooldown(Player player) {
-        Valorant.getInstance().getAbilityManager().getPlayerCooldowns().put(player.getUniqueId(), this, getCooldown());
+        if (getCooldown() > 0) {
+            Valorant.getInstance().getAbilityManager().getPlayerCooldowns().put(player.getUniqueId(), this, getCooldown());
+        }
     }
 
     public abstract boolean activate(Player player, HotbarAction action);
@@ -58,6 +68,12 @@ public abstract class Ability {
     public enum AbilityPrice {
 
         FREE, ULTIMATE_POINTS, CREDITS;
+
+    }
+
+    public enum AbilityType {
+
+        BASIC, SIGNATURE, ULTIMATE
 
     }
 }
