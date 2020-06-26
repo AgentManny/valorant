@@ -1,5 +1,6 @@
 package gg.manny.valorant.agent;
 
+import gg.manny.valorant.Valorant;
 import gg.manny.valorant.agent.agents.Sage;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -12,10 +13,12 @@ public class AgentManager {
     private Set<Agent> agents = new HashSet<>();
     private Map<UUID, Agent> playerAgents = new HashMap<>();
 
-    public AgentManager() {
+    public AgentManager(Valorant plugin) {
         agents.addAll(Arrays.asList(
                 new Sage()
         ));
+
+
     }
 
 

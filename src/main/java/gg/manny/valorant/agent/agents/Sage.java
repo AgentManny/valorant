@@ -1,16 +1,22 @@
 package gg.manny.valorant.agent.agents;
 
 import gg.manny.valorant.ability.sage.HealingOrb;
+import gg.manny.valorant.ability.sage.SlowOrb;
 import gg.manny.valorant.agent.Agent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+
+import java.util.Arrays;
 
 public class Sage extends Agent {
 
     public Sage() {
         super("Sage", AgentCategory.SENTINEL);
 
-        this.abilities.add(new HealingOrb());
+        this.abilities.addAll(Arrays.asList(
+                new HealingOrb(),
+                new SlowOrb()
+        ));
     }
 
     @Override

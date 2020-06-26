@@ -6,23 +6,22 @@ import org.bukkit.Material;
 
 public class Omen extends Agent {
 
-
-    public Omen(String name, AgentCategory type) {
+    public Omen() {
         super("Omen", AgentCategory.CONTROLLER);
     }
 
     @Override
-    public ChatColor color() {
+    public ChatColor getColor() {
         return ChatColor.DARK_PURPLE;
     }
 
     @Override
-    public Material icon() {
+    public Material getIcon() {
         return Material.PURPLE_DYE;
     }
 
     @Override
-    public String description() {
+    public String getDescription() {
         return "A phantom of a memory, Omen hunts in the shadows." +
                 " He renders enemies blind, teleports across the field, " +
                 "then lets paranoia take hold as foes scramble to uncover where it might strike next.";
