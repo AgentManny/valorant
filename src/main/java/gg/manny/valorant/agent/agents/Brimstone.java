@@ -11,12 +11,12 @@ public class Brimstone extends Agent {
 
     @Override
     public ChatColor getColor() {
-        return ChatColor.BLACK;
+        return ChatColor.GOLD;
     }
 
     @Override
     public Material getIcon() {
-        return Material.ENDERMITE_SPAWN_EGG;
+        return Material.DRIED_KELP;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.ipvp.ingot.Hotbar;
 import org.ipvp.ingot.HotbarApi;
 import org.ipvp.ingot.Slot;
@@ -37,7 +38,9 @@ public abstract class Agent {
 
     public void activate(Player player) {
         Hotbar hotbar = new VanillaHotbar();
-        hotbar.getSlot(0).setItem(new ItemStack(Material.DIAMOND_SWORD, 1));
+
+        hotbar.getSlot(0).setItem(new ItemStack(Material.DIAMOND_SWORD));
+        hotbar.getSlot(8).setItem(new ItemStack(Material.NETHER_STAR));
 
 
         for (Ability ability : abilities) {

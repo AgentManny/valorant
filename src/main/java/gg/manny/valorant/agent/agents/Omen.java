@@ -17,7 +17,7 @@ public class Omen extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.SHULKER_SPAWN_EGG;
+        return Material.WITHER_SKELETON_SKULL;
     }
 
     @Override
