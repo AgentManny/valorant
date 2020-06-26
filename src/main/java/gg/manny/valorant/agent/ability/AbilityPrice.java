@@ -1,4 +1,4 @@
-package gg.manny.valorant.ability;
+package gg.manny.valorant.agent.ability;
 
 public enum AbilityPrice {
 

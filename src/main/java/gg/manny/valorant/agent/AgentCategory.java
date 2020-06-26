@@ -1,6 +1,6 @@
 package gg.manny.valorant.agent;
 
-public enum AgentType {
+public enum AgentCategory {
 
     CONTROLLER,
     DUALIST,

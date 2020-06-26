@@ -1,4 +1,5 @@
 name: Valorant
 main: gg.manny.valorant.Valorant
 version: ${git.commit.id.abbrev}
+api-version: "1.13"
 commands:

@@ -1,17 +1,33 @@
 package gg.manny.valorant.agent.agents;
 
-import gg.manny.valorant.ability.AbilityType;
 import gg.manny.valorant.agent.Agent;
-import gg.manny.valorant.agent.AgentType;
+import gg.manny.valorant.agent.AgentCategory;
+import gg.manny.valorant.agent.ability.AbilityType;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import java.util.Arrays;
 
 public class Sage extends Agent {
 
     public Sage() {
-        super("Sage", AgentType.SENTINEL);
+        super("Sage", AgentCategory.SENTINEL);
 
         abilities = Arrays.asList(AbilityType.HEALING_ORB);
     }
 
+    @Override
+    public ChatColor color() {
+        return ChatColor.DARK_AQUA;
+    }
+
+    @Override
+    public Material icon() {
+        return Material.HEART_OF_THE_SEA;
+    }
+
+    @Override
+    public String description() {
+        return "I don't have a description.";
+    }
 }
