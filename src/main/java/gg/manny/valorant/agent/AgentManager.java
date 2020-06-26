@@ -1,12 +1,7 @@
 package gg.manny.valorant.agent;
 
-import gg.manny.valorant.Valorant;
-import gg.manny.valorant.agent.ability.Ability;
-import gg.manny.valorant.agent.ability.AbilityType;
-import gg.manny.valorant.agent.ability.sage.HealingOrb;
 import gg.manny.valorant.agent.agents.Sage;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -15,30 +10,12 @@ import java.util.*;
 public class AgentManager {
 
     private Set<Agent> agents = new HashSet<>();
-    private Map<AbilityType, Ability> abilities = new HashMap<>();
-
     private Map<UUID, Agent> playerAgents = new HashMap<>();
 
     public AgentManager() {
         agents.addAll(Arrays.asList(
                 new Sage()
         ));
-
-        Arrays.asList(
-                new HealingOrb()
-        ).forEach(ability -> abilities.put(ability.ability(), ability));
-
-        Valorant.getInstance().getServer().getScheduler().runTaskTimer(Valorant.getInstance(), () -> {
-            playerAgents.forEach((uuid, agent) -> {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    for (AbilityType type : agent.getAbilities()) {
-                        Ability ability = abilities.get(type);
-                        ability.tick(player);
-                    }
-                }
-            });
-        }, 2L, 2L);
     }
 
 

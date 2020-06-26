@@ -1,7 +1,6 @@
 package gg.manny.valorant.agent;
 
-import gg.manny.valorant.agent.ability.Ability;
-import gg.manny.valorant.agent.ability.AbilityType;
+import gg.manny.valorant.ability.Ability;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
@@ -22,7 +21,7 @@ public abstract class Agent {
 
     private final String name;
     private final AgentCategory type;
-    protected List<AbilityType> abilities = new ArrayList<>();
+    protected List<Ability> abilities = new ArrayList<>();
 
     public abstract ChatColor color();
 
@@ -35,12 +34,16 @@ public abstract class Agent {
         hotbar.getSlot(0).setItem(new ItemStack(Material.DIAMOND_SWORD, 1));
 
 
-        for (AbilityType type : abilities) {
-            Ability ability = type.get();
-
-            Slot slot = hotbar.getSlot(ability.slot());
-            slot.setActionHandler((clicker, action) -> ability.activate(player, action));
-            slot.setItem(type.getItem());
+        for (Ability ability : abilities) {
+            Slot slot = hotbar.getSlot(ability.getSlot());
+            slot.setActionHandler((clicker, action) -> {
+                if (!ability.hasCooldown(player)) {
+                    if (ability.activate(player, action)) {
+                        ability.addCooldown(player);
+                    }
+                }
+            });
+            slot.setItem(ability.getItem());
         }
 
         HotbarApi.setCurrentHotbar(player, hotbar);
@@ -50,5 +53,13 @@ public abstract class Agent {
         HotbarApi.setCurrentHotbar(player, null);
     }
 
+    public enum AgentCategory {
+
+        CONTROLLER,
+        DUALIST,
+        INITIATOR,
+        SENTINEL;
+
+    }
 
 }
