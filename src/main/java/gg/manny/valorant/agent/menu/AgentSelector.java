@@ -23,7 +23,6 @@ public class AgentSelector extends Menu {
         int x = 1, y = 1;
         for (Agent agent : Valorant.getInstance().getAgentManager().getAgents()) {
             buttonMap.put(getSlot(x, y), new AgentInfoButton(agent, true));
-
             if (x++ >= 7) {
                 x = 1;
                 y++;

@@ -1,5 +1,6 @@
 package gg.manny.valorant.agent.menu;
 
+import gg.manny.valorant.Valorant;
 import gg.manny.valorant.ability.Ability;
 import gg.manny.valorant.agent.Agent;
 import gg.manny.valorant.util.ItemBuilder;
@@ -7,6 +8,7 @@ import gg.manny.valorant.util.menu.Button;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import java.util.List;
 
@@ -39,5 +41,12 @@ public class AgentInfoButton extends Button {
     @Override
     public Material getMaterial(Player player) {
         return agent.getIcon();
+    }
+
+    @Override
+    public void clicked(Player player, int slot, ClickType clickType) {
+        Valorant.getInstance().getAgentManager().setAgent(player, agent);
+        player.sendMessage(ChatColor.GRAY + "You have chosen " + ChatColor.RED + agent.getName());
+        player.closeInventory();
     }
 }

@@ -16,7 +16,7 @@ public class Sova extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.TIPPED_ARROW;
+        return Material.SQUID_SPAWN_EGG;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class LobbyManager {
     }
 
     private void loadHotbars() {
-        Slot slot = SELECT_HOTBAR.getSlot(0);
+        Slot slot = SELECT_HOTBAR.getSlot(4);
         slot.setItem(new ItemStack(Material.COMPASS));
         slot.setActionHandler((player, action) -> {
             if (action.getType().isRightClick()) {

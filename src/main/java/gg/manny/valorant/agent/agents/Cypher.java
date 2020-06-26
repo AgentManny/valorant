@@ -20,7 +20,7 @@ public class Cypher extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.END_CRYSTAL;
+        return Material.ELDER_GUARDIAN_SPAWN_EGG;
     }
 
     @Override

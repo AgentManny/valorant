@@ -16,7 +16,7 @@ public class Brimstone extends Agent {
 
     @Override
     public Material getIcon() {
-        return Material.DRIED_KELP;
+        return Material.ENDERMITE_SPAWN_EGG;
     }
 
     @Override
