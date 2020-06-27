@@ -36,6 +36,7 @@ public class NeuralTheft extends Ability {
         player.getNearbyEntities(20, 20, 20).forEach(entity -> {
             if (entity instanceof LivingEntity) {
                 ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 60, 0));
+                //play sound to those entities once they get the effect
             }
         });
         player.sendTitle("", ChatColor.RED.toString() + ChatColor.BOLD + "LOCATION REVEALED", 10, 60, 10);

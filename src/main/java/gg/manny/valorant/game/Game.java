@@ -50,7 +50,8 @@ public class Game {
     }
 
     public void tick() {
-        if (--timer < 0) return;
+        if (timer <= 0) return;
+        --timer;
 
         timerBar.setTitle(state.getName() + ": " + ChatColor.RED + TimeUtils.formatIntoMMSS(timer));
 
