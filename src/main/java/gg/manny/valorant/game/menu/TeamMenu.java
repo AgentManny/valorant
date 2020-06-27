@@ -1,10 +1,11 @@
 package gg.manny.valorant.game.menu;
 
+import gg.manny.valorant.Valorant;
+import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.Team;
 import gg.manny.valorant.util.menu.Button;
 import gg.manny.valorant.util.menu.Menu;
 import lombok.AllArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -57,7 +58,15 @@ public class TeamMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType) {
-            player.sendMessage(ChatColor.RED + "Looks like this isn't supported yet.");
+            Game game = Valorant.getInstance().getGame();
+            player.closeInventory();
+            if (Valorant.getInstance().getGame().getPlayerTeam(player) == null) {
+                Valorant.getInstance().getGame().setPlayerTeam(player, team);
+                player.sendMessage(ChatColor.WHITE + "You have joined " + team.getColor() + team.getName());
+                player.sendTitle(team.getColor() + team.getName(),ChatColor.WHITE + "Joined" , 10, 30, 10);
+            } else {
+                player.sendMessage(ChatColor.WHITE + "You are already on Team " + game.getPlayerTeam(player).getColor() + game.getPlayerTeam(player).getName());
+            }
         }
     }
 }

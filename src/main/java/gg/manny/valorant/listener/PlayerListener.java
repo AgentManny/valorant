@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 @RequiredArgsConstructor
@@ -27,12 +28,19 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         // todo remove player if they are spectating -- as we're allowing people to relog
+        // make sure player spectates teammates
         // todo add a forfeit if they don't come back within 5 minutes
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        event.setFormat(ChatColor.DARK_AQUA + "(All) " + player.getName() + ChatColor.WHITE + ": " + event.getMessage());
+        event.setFormat(ChatColor.DARK_AQUA + "(All)debug " + player.getName() + ChatColor.WHITE + ": " + event.getMessage());
     }
+
+    @EventHandler
+    public void onPickup(PlayerPickupItemEvent event) {
+        event.setCancelled(true);
+    }
+
 }
