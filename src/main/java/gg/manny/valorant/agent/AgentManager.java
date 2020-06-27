@@ -1,5 +1,8 @@
 package gg.manny.valorant.agent;
 
+import gg.manny.valorant.Valorant;
+import gg.manny.valorant.ability.tasks.AbilityCooldownTask;
+import gg.manny.valorant.ability.tasks.AbilityVisualTask;
 import gg.manny.valorant.agent.agents.*;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -9,10 +12,13 @@ import java.util.*;
 @Getter
 public class AgentManager {
 
+    private final Valorant plugin;
+
     private Set<Agent> agents = new LinkedHashSet<>();
     private Map<UUID, Agent> playerAgents = new HashMap<>();
 
-    public AgentManager() {
+    public AgentManager(Valorant plugin) {
+        this.plugin = plugin;
         agents.addAll(Arrays.asList(
                 new Jett(),
                 new Raze(),
@@ -26,6 +32,9 @@ public class AgentManager {
                 new Cypher(),
                 new Reyna()
         ));
+
+        new AbilityVisualTask().runTaskTimer(plugin, 2L, 2L);
+        new AbilityCooldownTask().runTaskTimer(plugin, 20L, 20L);
     }
 
 

@@ -50,7 +50,8 @@ public class Game {
     }
 
     public void tick() {
-        if (--timer < 0) return;
+        if (timer <= 0) return;
+        --timer;
 
         timerBar.setTitle(state.getName() + ": " + ChatColor.RED + TimeUtils.formatIntoMMSS(timer));
 
@@ -89,6 +90,11 @@ public class Game {
             }
         }
         return null;
+    }
+
+    public void setPlayerTeam(Player player, Team team) {
+        GamePlayer gamePlayer = Valorant.getInstance().getPlayerManager().getByPlayer(player);
+        players.get(team).addPlayer(gamePlayer);
     }
 
     private void checkPlayerRequirements() {

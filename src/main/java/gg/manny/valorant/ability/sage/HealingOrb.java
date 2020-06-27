@@ -10,7 +10,9 @@ import org.ipvp.ingot.HotbarAction;
 public class HealingOrb extends Ability {
 
     public HealingOrb() {
-        super("Healing Orb", AbilityType.SIGNATURE, ChatColor.GREEN);
+        super("Healing Orb", AbilitySkill.SIGNATURE, AbilityPrice.FREE);
+
+        this.cooldown = 5;
     }
 
     @Override
@@ -23,16 +25,6 @@ public class HealingOrb extends Ability {
         return "EQUIP a healing orb. " +
                 "Left Click with your crosshairs over a damaged ally to activate a heal-over-time on them. " +
                 "Right Click while Sage is damaged to activate a self heal-over-time.";
-    }
-
-    @Override
-    public int getCooldown() {
-        return 5;
-    }
-
-    @Override
-    public int getSlot() {
-        return 3;
     }
 
     @Override
