@@ -35,5 +35,4 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         event.setFormat(ChatColor.DARK_AQUA + "(All) " + player.getName() + ChatColor.WHITE + ": " + event.getMessage());
     }
-
 }
