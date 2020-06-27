@@ -2,7 +2,6 @@ package gg.manny.valorant.ability.cypher;
 
 import gg.manny.valorant.ability.Ability;
 import org.bukkit.ChatColor;
-import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,8 +12,9 @@ import org.ipvp.ingot.HotbarAction;
 public class NeuralTheft extends Ability {
 
     public NeuralTheft() {
-        super("Neural Theft", AbilityType.ULTIMATE, ChatColor.BLUE);
+        super("Neural Theft", AbilitySkill.ULTIMATE, AbilityPrice.ULTIMATE_POINTS);
     }
+
 
     @Override
     public Material getIcon() {
@@ -24,11 +24,6 @@ public class NeuralTheft extends Ability {
     @Override
     public String getDescription() {
         return "Extract information from the corpse of an enemy, revealing the location of their living allies.";
-    }
-
-    @Override
-    public int getSlot() {
-        return 6;
     }
 
     @Override

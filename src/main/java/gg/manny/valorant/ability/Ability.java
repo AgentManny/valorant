@@ -1,9 +1,11 @@
 package gg.manny.valorant.ability;
 
 import gg.manny.valorant.Valorant;
+import gg.manny.valorant.player.GamePlayer;
 import gg.manny.valorant.util.ItemBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,20 +13,26 @@ import org.bukkit.inventory.ItemStack;
 import org.ipvp.ingot.HotbarAction;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public abstract class Ability {
 
     private final String name;
-    private final AbilityType type;
 
-    private ChatColor color;
+    private final AbilitySkill skill;
+    private final AbilityPrice price;
 
-    public String getDisplayName() {
-        return this.color + this.name;
+    protected int cooldown = 0;
+
+    public ChatColor getColor() {
+        return ChatColor.WHITE;
     }
 
-    public AbilityPrice getPrice() {
-        return AbilityPrice.FREE;
+    public String getDisplayName() {
+        return getColor() + this.name;
+    }
+
+    public int getSlot() {
+        return skill.getSlot(); // Some stuff like Reyna abilities override slot data
     }
 
     public int getCost() {
@@ -35,19 +43,15 @@ public abstract class Ability {
 
     public abstract String getDescription();
 
-    public int getCooldown() {
-        return 0;
-    }
-
-    public abstract int getSlot();
-
     public boolean hasCooldown(Player player) {
-        return (Valorant.getInstance().getAbilityManager().getPlayerCooldowns().contains(player.getUniqueId(), this));
+        GamePlayer gamePlayer = Valorant.getInstance().getPlayerManager().getByPlayer(player);
+        return gamePlayer != null && gamePlayer.getCooldowns().containsKey(this);
     }
 
     public void addCooldown(Player player) {
-        if (getCooldown() > 0) {
-            Valorant.getInstance().getAbilityManager().getPlayerCooldowns().put(player.getUniqueId(), this, getCooldown());
+        if (cooldown > 0) {
+            GamePlayer gamePlayer = Valorant.getInstance().getPlayerManager().getByPlayer(player);
+            gamePlayer.getCooldowns().put(this, cooldown);
         }
     }
 
@@ -71,9 +75,13 @@ public abstract class Ability {
 
     }
 
-    public enum AbilityType {
+    @Getter
+    @AllArgsConstructor
+    public enum AbilitySkill {
 
-        BASIC, SIGNATURE, ULTIMATE
+        BASIC(3), SIGNATURE(4), ULTIMATE(5);
+
+        private int slot;
 
     }
 }

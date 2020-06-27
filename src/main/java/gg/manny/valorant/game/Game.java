@@ -92,6 +92,11 @@ public class Game {
         return null;
     }
 
+    public void setPlayerTeam(Player player, Team team) {
+        GamePlayer gamePlayer = Valorant.getInstance().getPlayerManager().getByPlayer(player);
+        players.get(team).addPlayer(gamePlayer);
+    }
+
     private void checkPlayerRequirements() {
         boolean requiredPlayers = REQUIRED_PLAYERS <= Bukkit.getOnlinePlayers().size();
         if (requiredPlayers) {

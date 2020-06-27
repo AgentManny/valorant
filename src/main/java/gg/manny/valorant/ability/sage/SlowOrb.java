@@ -6,7 +6,6 @@ import gg.manny.valorant.Valorant;
 import gg.manny.valorant.ability.Ability;
 import gg.manny.valorant.util.MathUtil;
 import net.minecraft.server.v1_15_R1.*;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
@@ -27,17 +26,12 @@ public class SlowOrb extends Ability {
     private Multimap<UUID, Integer> dummyEntities = ArrayListMultimap.create();
 
     public SlowOrb() {
-        super("Slow Orb", AbilityType.BASIC, ChatColor.AQUA);
+        super("Slow Orb", AbilitySkill.BASIC, AbilityPrice.CREDITS);
     }
 
     @Override
     public int getCost() {
         return 100;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 0;
     }
 
     @Override
@@ -49,11 +43,6 @@ public class SlowOrb extends Ability {
     public String getDescription() {
         return "Equip a Slowing Orb. " +
                 "Fire to launch the Orb, which expands upon hitting the ground, creating a zone that slows players who walk on it.";
-    }
-
-    @Override
-    public int getSlot() {
-        return 4;
     }
 
     @Override

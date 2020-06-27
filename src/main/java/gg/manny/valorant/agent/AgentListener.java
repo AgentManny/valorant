@@ -14,7 +14,7 @@ public class AgentListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        agentManager.getPlayerAgents().remove(player.getUniqueId());
+        agentManager.getPlayerAgents().remove(player.getUniqueId()); // todo temp
     }
 
 }
