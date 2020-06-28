@@ -28,7 +28,6 @@ public class AgentSelector extends Menu {
                 y++;
             }
         }
-
         return buttonMap;
     }
 

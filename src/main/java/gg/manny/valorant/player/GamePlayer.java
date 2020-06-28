@@ -42,6 +42,4 @@ public class GamePlayer {
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
     }
-
-
 }
