@@ -1,20 +1,19 @@
-package gg.manny.valorant.player;
+package gg.manny.valorant.team;
 
-import gg.manny.valorant.game.Team;
+import gg.manny.valorant.player.GamePlayer;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
-@RequiredArgsConstructor
-public class GameTeam<T extends GamePlayer> {
+public class Team<T extends GamePlayer> {
 
-    private final Team team;
-    private List<T> gamePlayers = new ArrayList<>();
+    private Set<T> gamePlayers = new HashSet<>();
 
     public boolean containsPlayer(Player player) {
         for (T gamePlayer : this.gamePlayers) {

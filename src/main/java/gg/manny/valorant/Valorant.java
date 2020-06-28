@@ -2,12 +2,11 @@ package gg.manny.valorant;
 
 import gg.manny.valorant.agent.AgentManager;
 import gg.manny.valorant.game.Game;
-import gg.manny.valorant.listener.GameListener;
-import gg.manny.valorant.listener.ItemListener;
+import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.listener.PlayerListener;
-import gg.manny.valorant.lobby.LobbyManager;
 import gg.manny.valorant.player.PlayerManager;
 import gg.manny.valorant.sidebar.GameSidebar;
+import gg.manny.valorant.team.TeamManager;
 import gg.manny.valorant.util.scoreboard.MScoreboardHandler;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,29 +23,27 @@ public class Valorant extends JavaPlugin {
     private static Valorant instance;
 
     private Game game;
+    private GameLobby lobby;
 
-    private PlayerManager playerManager;
     private AgentManager agentManager;
 
-    // todo remove lobby shit
-    private LobbyManager lobbyManager;
-
+    private TeamManager teamManager;
+    private PlayerManager playerManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
         game = new Game(this);
+        lobby = new GameLobby(this);
 
-        playerManager = new PlayerManager(this);
         agentManager = new AgentManager(this);
 
-        lobbyManager = new LobbyManager(this); // todo remove
+        teamManager = new TeamManager(this);
+        playerManager = new PlayerManager(this);
 
         Arrays.asList(
-                new GameListener(game),
                 new PlayerListener(this),
-                new ItemListener(),
                 new HotbarFunctionListener()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 

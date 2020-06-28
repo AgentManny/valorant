@@ -2,6 +2,7 @@ package gg.manny.valorant.player;
 
 import gg.manny.valorant.ability.Ability;
 import gg.manny.valorant.agent.Agent;
+import gg.manny.valorant.game.TeamType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class GamePlayer {
     private final String name;
 
     private Agent selectedAgent;
+    private TeamType team = TeamType.NONE;
 
     private Map<Ability, Integer> cooldowns = new HashMap<>();
     private int ultimatePoints = 0;

@@ -1,11 +1,13 @@
-package gg.manny.valorant.game.menu;
+package gg.manny.valorant.team.menu;
 
+import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
-import gg.manny.valorant.game.Game;
-import gg.manny.valorant.game.Team;
+import gg.manny.valorant.game.TeamType;
+import gg.manny.valorant.team.TeamManager;
 import gg.manny.valorant.util.menu.Button;
 import gg.manny.valorant.util.menu.Menu;
 import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,9 +29,9 @@ public class TeamMenu extends Menu {
     public Map<Integer, Button> getButtons(Player player) {
         Map<Integer, Button> buttons = new HashMap<>();
 
-        buttons.put(12, new TeamButton(Team.ATTACKERS));
-        buttons.put(14, new TeamButton(Team.DEFENDERS));
-        buttons.put(26, new TeamButton(Team.SPECTATORS));
+        buttons.put(12, new TeamButton(TeamType.ATTACKERS));
+        buttons.put(14, new TeamButton(TeamType.DEFENDERS));
+        buttons.put(26, new TeamButton(TeamType.SPECTATORS));
 
         return buttons;
     }
@@ -37,7 +39,7 @@ public class TeamMenu extends Menu {
     @AllArgsConstructor
     private class TeamButton extends Button {
 
-        private Team team;
+        private TeamType team;
 
         @Override
         public String getName(Player player) {
@@ -58,15 +60,16 @@ public class TeamMenu extends Menu {
 
         @Override
         public void clicked(Player player, int slot, ClickType clickType) {
-            Game game = Valorant.getInstance().getGame();
             player.closeInventory();
-            if (Valorant.getInstance().getGame().getPlayerTeam(player) == null) {
-                Valorant.getInstance().getGame().setPlayerTeam(player, team);
-                player.sendMessage(ChatColor.WHITE + "You have joined " + team.getColor() + team.getName());
-                player.sendTitle(team.getColor() + team.getName(),ChatColor.WHITE + "Joined" , 10, 30, 10);
-            } else {
-                player.sendMessage(ChatColor.WHITE + "You are already on Team " + game.getPlayerTeam(player).getColor() + game.getPlayerTeam(player).getName());
+
+            TeamManager teamManager = Valorant.getInstance().getTeamManager();
+            if (teamManager.containsPlayer(player) && !player.isOp()) { // Allow OPs to switch teams
+                player.sendMessage(ChatColor.RED + "You are already in a team, you can't switch sides.");
+                return;
             }
+
+            teamManager.setTeam(team, player);
+            Bukkit.broadcastMessage(Locale.BROADCAST_PREFIX + player.getName() + " joined " + team.getDisplayName() + ChatColor.WHITE + ".");
         }
     }
 }
