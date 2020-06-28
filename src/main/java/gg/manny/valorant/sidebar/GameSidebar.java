@@ -40,6 +40,7 @@ public class GameSidebar implements ScoreboardAdapter {
         Agent selectedAgent = plugin.getAgentManager().getAgent(player);
 
         lines.add(ChatColor.GRAY + game.getState().getFriendlyName());
+        lines.add(" ");
         lines.add(ChatColor.WHITE + "Team: " + (team == null ? ChatColor.RED + "None" : team.getColor() + team.getName()));
         if (team != null) {
             lines.add(ChatColor.WHITE + "Selected Agent:");
@@ -55,7 +56,6 @@ public class GameSidebar implements ScoreboardAdapter {
         }
 
         // Footer/Header
-        lines.add(0, " ");
         lines.add("  ");
         lines.add(ChatColor.RED + "valorant.manny.gg");
     }
