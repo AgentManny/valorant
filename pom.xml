@@ -29,8 +29,15 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.1-SNAPSHOT</version> <!-- todo Update version -->
-            <scope>provided</scope>
+            <version>7.1.0-SNAPSHOT</version> <!-- todo Update version -->
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/worldedit.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>commodore</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Spigot -->
@@ -48,6 +55,10 @@
             <id>jcenter</id>
             <name>jcenter-bintray</name>
             <url>https://jcenter.bintray.com</url>
+        </repository>
+        <repository>
+            <id>minecraft-repo</id>
+            <url>https://libraries.minecraft.net/</url>
         </repository>
     </repositories>
 

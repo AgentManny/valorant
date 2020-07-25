@@ -15,8 +15,8 @@ public class TeamManager {
 
     private final Valorant plugin;
 
-    private GameTeam<GamePlayer> teamOne = new GameTeam<>();
-    private GameTeam<GamePlayer> teamTwo = new GameTeam<>();
+    private GameTeam<GamePlayer> teamA = new GameTeam<>();
+    private GameTeam<GamePlayer> teamB = new GameTeam<>();
     private GameTeam<GamePlayer> teamSpectator = new GameTeam<>();
 
     private Map<TeamType, GameTeam<GamePlayer>> players = new HashMap<>();
@@ -25,8 +25,8 @@ public class TeamManager {
         this.plugin = plugin;
 
         boolean randomTeam = Valorant.RANDOM.nextBoolean();
-        players.put(TeamType.ATTACKERS, randomTeam ? teamOne : teamTwo);
-        players.put(TeamType.DEFENDERS, randomTeam ? teamTwo : teamOne);
+        players.put(TeamType.ATTACKERS, randomTeam ? teamA : teamB);
+        players.put(TeamType.DEFENDERS, randomTeam ? teamB : teamA);
         players.put(TeamType.SPECTATORS, teamSpectator);
     }
 

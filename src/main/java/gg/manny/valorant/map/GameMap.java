@@ -1,6 +1,7 @@
 package gg.manny.valorant.map;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import gg.manny.valorant.Valorant;
 import lombok.Getter;
@@ -16,7 +17,6 @@ import java.util.Map;
 import static gg.manny.valorant.map.MapManager.MAP_DIRECTORY;
 
 @Getter
-@RequiredArgsConstructor
 public class GameMap {
 
     /** Returns the name of the map */
@@ -29,13 +29,18 @@ public class GameMap {
     /** Returns the location areas of a game map */
     private Map<String, Polygonal2DRegion> locations = new HashMap<>();
 
+    public GameMap(String name) {
+        this.name = name;
+        save();
+    }
+
     public GameMap(String name, JsonObject data) {
         this.name = name;
         this.description = data.get("description").getAsString();
 
         if (data.has("locations") && data.get("locations").isJsonObject()) {
             JsonObject locations = data.getAsJsonObject("locations");
-            locations.entrySet().forEach(entry -> this.locations.put(entry.getKey(), Valorant.GSON.fromJson(entry.getValue(), Polygonal2DRegion.class)));
+            locations.entrySet().forEach(entry -> this.locations.put(entry.getKey(), Valorant.GSON.fromJson(entry.getValue(), new TypeToken<Polygonal2DRegion>(){}.getType())));
         }
     }
 

@@ -1,6 +1,7 @@
 package gg.manny.valorant.game;
 
 import gg.manny.valorant.Valorant;
+import gg.manny.valorant.map.GameMap;
 import gg.manny.valorant.team.GameTeam;
 import gg.manny.valorant.util.MathUtil;
 import gg.manny.valorant.util.TimeUtils;
@@ -17,6 +18,8 @@ import org.bukkit.scheduler.BukkitTask;
 @Getter
 @Setter
 public class Game {
+
+    private GameMap map;
 
     private GameState state;
     private GameState roundState;

@@ -1,9 +1,9 @@
 package gg.manny.valorant.map;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import gg.manny.valorant.Valorant;
+import lombok.Getter;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,18 +12,16 @@ import java.util.List;
 
 public class MapManager {
 
-    protected static final File MAP_DIRECTORY = new File(Valorant.getInstance().getDataFolder(), "maps");
+    protected static final File MAP_DIRECTORY;
 
     private final Valorant plugin;
 
-    private List<GameMap> maps = new ArrayList<>();
+    @Getter private List<GameMap> maps = new ArrayList<>();
 
     public MapManager(Valorant plugin) {
         this.plugin = plugin;
 
-        if (MAP_DIRECTORY.mkdir()) {
-            plugin.getLogger().info("[Map] Created /maps/ directory");
-        } else {
+        if (MAP_DIRECTORY.exists()) {
             plugin.getLogger().info("[Map] Loading /maps/ directory...");
             File[] maps = MAP_DIRECTORY.listFiles((dir, name) -> name.endsWith(".json"));
             if (maps == null) {
@@ -32,22 +30,24 @@ public class MapManager {
             }
             for (File mapFile : maps) {
                 try (FileReader reader = new FileReader(mapFile)) {
-                    JsonParser parser = new JsonParser();
-                    JsonArray array = parser.parse(reader).getAsJsonArray();
-
-                    for (Object object : array) {
-                        JsonObject jsonObject = (JsonObject) object;
-                        String name = jsonObject.get("name").getAsString();
-                        plugin.getLogger().info("[Map] Loaded map " + name + ".");
-                        this.maps.add(new GameMap(name, jsonObject));
-                    }
+                    JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
+                    String name = jsonObject.get("name").getAsString();
+                    plugin.getLogger().info("[Map] Loaded map " + name + ".");
+                    this.maps.add(new GameMap(name, jsonObject));
 
                 } catch (Exception e) {
                     plugin.getLogger().severe("[Map] Failed to load " + mapFile.getName() + ":");
                     e.printStackTrace();
                 }
             }
+        } else {
+            plugin.getLogger().info("[Map] Created /maps/ directory");
         }
+    }
+
+    static {
+        MAP_DIRECTORY = new File(Valorant.getInstance().getDataFolder(), "maps");
+        MAP_DIRECTORY.mkdirs();
     }
 
     public void save() {
