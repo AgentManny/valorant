@@ -14,7 +14,7 @@ import org.ipvp.ingot.Slot;
 import org.ipvp.ingot.type.VanillaHotbar;
 
 // - - - - Lobby logic - - - - -
-// Players teleport to waiting room
+// Players teleport to waiting room (Use default world ("world") spawn location)
 // Only able to select Team A or Team B (not agents until game is ready)
 //
 // Allow voting for a map (book that shows maps inside)
