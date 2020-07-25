@@ -1,0 +1,24 @@
+map {
+  create {
+    name brigadier:string single_word;
+  }
+  remove {
+    map brigadier:string single_word;
+  }
+  info {
+    map brigadier:string single_word;
+  }
+  list;
+  setdescription {
+    description brigadier:string greedy_phrase;
+  }
+  locations {
+    add {
+        location brigadier:string greedy_phrase;
+    }
+    remove {
+        location brigadier:string greedy_phrase;
+    }
+    list;
+  }
+}
