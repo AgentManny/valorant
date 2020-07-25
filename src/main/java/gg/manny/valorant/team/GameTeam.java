@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-public class Team<T extends GamePlayer> {
+public class GameTeam<T extends GamePlayer> {
 
     private Set<T> gamePlayers = new HashSet<>();
 

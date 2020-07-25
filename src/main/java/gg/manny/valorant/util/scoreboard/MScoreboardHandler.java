@@ -22,7 +22,6 @@ public final class MScoreboardHandler {
     private MScoreboardHandler() {
     }
 
-
     /**
      * Initiates the scoreboard handler.
      * This can only be called once, and is called automatically when Berlin enables.

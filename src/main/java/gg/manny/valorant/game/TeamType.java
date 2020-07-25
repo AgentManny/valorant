@@ -2,7 +2,7 @@ package gg.manny.valorant.game;
 
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.player.GamePlayer;
-import gg.manny.valorant.team.Team;
+import gg.manny.valorant.team.GameTeam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -31,7 +31,7 @@ public enum TeamType {
         return color + "(" + name + ") " + ChatColor.WHITE;
     }
 
-    public Team<GamePlayer> getTeam() {
+    public GameTeam<GamePlayer> getTeam() {
         return Valorant.getInstance().getTeamManager().getTeam(this);
     }
 

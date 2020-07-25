@@ -6,11 +6,13 @@ import com.mojang.authlib.properties.Property;
 import gg.manny.valorant.ability.Ability;
 import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -26,6 +28,7 @@ public class Spycam extends Ability {
     private static int CAMERA_RADIUS = 20;
 
     private Map<UUID, EntityArmorStand> hovering = new HashMap<>();
+    private Map<UUID, ArmorStand> activeCamera = new HashMap<>();
 
     public Spycam() {
         super("Spycam", AbilitySkill.SIGNATURE, AbilityPrice.FREE);
@@ -55,20 +58,59 @@ public class Spycam extends Ability {
     @Override
     public boolean activate(Player player, HotbarAction action) {
         ActionHandler.ActionType actionType = action.getType();
-        if (actionType == ActionHandler.ActionType.HOVER) {
-            hovering.put(player.getUniqueId(), getCoolStand(player));
-            player.sendMessage(ChatColor.GRAY + "DEBUG: Cypher Mode activated");
+        if (actionType == ActionHandler.ActionType.LEFT_CLICK) {
+            if (hovering.containsKey(player.getUniqueId())) { // Check if they are looking at their camera and remove it if they are shifting?
+
+                EntityArmorStand entity = hovering.get(player.getUniqueId());
+                Location location = entity.getBukkitEntity().getLocation();
+                ArmorStand armorStand = player.getWorld().spawn(location, ArmorStand.class);
+                armorStand.setArms(false);
+                armorStand.setGravity(false);
+                armorStand.setBasePlate(false);
+                //armorStand.setHeadPose(entity.getbuk);
+                Location location1 = armorStand.getLocation();
+                location1.setX(location.getX());
+                location1.setY(location.getY());
+                location1.setZ(location.getZ());
+                location1.setYaw(location.getYaw());
+                location1.setPitch(location.getPitch());
+                location1.setDirection(location.getDirection());
+                player.sendMessage(ChatColor.GRAY + "DEBUG: Spycam has been added to " + "(" + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
+                activeCamera.put(player.getUniqueId(), armorStand);
+                hovering.remove(player.getUniqueId());
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entity.getId()));
+            }
+        } else if (actionType == ActionHandler.ActionType.RIGHT_CLICK) {
+            if (activeCamera.containsKey(player.getUniqueId())) {
+
+                ArmorStand entity = activeCamera.get(player.getUniqueId());
+                player.setGameMode(GameMode.SPECTATOR);
+
+                player.setSpectatorTarget(entity);
+                player.sendMessage(ChatColor.RED + "Spectating armor stand.");
+            } else {
+                player.sendMessage(ChatColor.RED + "You don't have a Camera active");
+            }
+        } else if (actionType == ActionHandler.ActionType.HOVER) {
+            if (!activeCamera.containsKey(player.getUniqueId())) {
+                hovering.put(player.getUniqueId(), getCoolStand(player));
+                player.sendMessage(ChatColor.GRAY + "DEBUG: Cypher Mode activated");
+            }
         } else if (actionType == ActionHandler.ActionType.UNHOVER) {
-            EntityArmorStand entity = hovering.get(player.getUniqueId());
-            hovering.remove(player.getUniqueId());
-            ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entity.getId()));
-            player.sendMessage(ChatColor.GRAY + "DEBUG: Cypher Mode de-activated");
+            if (!activeCamera.containsKey(player.getUniqueId())) {
+                EntityArmorStand entity = hovering.get(player.getUniqueId());
+                hovering.remove(player.getUniqueId());
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entity.getId()));
+                player.sendMessage(ChatColor.GRAY + "DEBUG: Cypher Mode de-activated");
+            }
         }
 
 
 
         return false;
     }
+
+
 
     public EntityArmorStand getCoolStand(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
@@ -104,7 +146,7 @@ public class Spycam extends Ability {
             Vector facingVector = player.getLocation().toVector().subtract(location.toVector()).normalize(); // We make da armor stand look at da nigga
             location.setDirection(facingVector);
 
-            ItemStack cameraHead = new ItemStack(accessible ? Material.PLAYER_HEAD : Material.RED_GLAZED_TERRACOTTA);
+            ItemStack cameraHead = new ItemStack(accessible ? Material.PLAYER_HEAD : Material.RED_CONCRETE);
             if (accessible) {
 
                 SkullMeta meta = (SkullMeta) cameraHead.getItemMeta();

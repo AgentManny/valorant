@@ -1,7 +1,7 @@
 package gg.manny.valorant.game;
 
 import gg.manny.valorant.Valorant;
-import gg.manny.valorant.team.Team;
+import gg.manny.valorant.team.GameTeam;
 import gg.manny.valorant.util.MathUtil;
 import gg.manny.valorant.util.TimeUtils;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class Game {
     private long startingIn = -1;
     private long startedAt = -1;
 
-    private Pair<TeamType, Team> winners;
+    private Pair<TeamType, GameTeam> winners;
 
     public Game(Valorant instance) {
         state = GameState.WAITING;

@@ -8,7 +8,6 @@ import gg.manny.valorant.util.packet.ScoreboardTeamPacketMod;
 import net.minecraft.server.v1_15_R1.Packet;
 import net.minecraft.server.v1_15_R1.PacketPlayOutScoreboardScore;
 import net.minecraft.server.v1_15_R1.ScoreboardServer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -40,32 +39,13 @@ final class PlayerScoreboard {
         this.player = player;
 
         Scoreboard board = Valorant.getInstance().getServer().getScoreboardManager().getNewScoreboard();
+        Valorant.getInstance().getTeamManager().initTeam(board);
 
-        this.objective = board.registerNewObjective("Construct", "dummy");
-        this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        board.getTeam("Attackers").addPlayer(player);
 
-        if (MScoreboardHandler.isShowHealthBelowPlayer()) {
-            Objective health = board.registerNewObjective("health", "health");
-            health.setDisplayName(ChatColor.DARK_RED + "\u2764");
-            health.getScore(player).setScore((int) player.getHealth());
+        objective = board.registerNewObjective("Construct", "dummy", "Scoreboard");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-            for(Player online : Bukkit.getOnlinePlayers()) {
-                if(online.isDead()) continue;
-
-                health.getScore(online).setScore((int) online.getHealth());
-
-                Scoreboard otherBoard = online.getScoreboard();
-                if (otherBoard != null && otherBoard.getObjective("health") != null) {
-                    Objective otherHealth = otherBoard.getObjective("health");
-                    if (!player.isDead()) {
-                        otherHealth.getScore(player).setScore((int) player.getHealth());
-                    }
-                }
-            }
-
-
-            health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        }
 
         player.setScoreboard(board);
     }

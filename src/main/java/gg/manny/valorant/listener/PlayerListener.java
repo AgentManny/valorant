@@ -6,7 +6,7 @@ import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.game.GameState;
 import gg.manny.valorant.player.GamePlayer;
-import gg.manny.valorant.team.Team;
+import gg.manny.valorant.team.GameTeam;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 
         Game game = plugin.getGame();
         GamePlayer gamePlayer = plugin.getPlayerManager().create(player.getUniqueId(), player.getName(), false);
-        Team<GamePlayer> team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());
+        GameTeam<GamePlayer> team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());
 
         String message = Locale.SYSTEM_PREFIX + player.getName() + " has " + (team != null && game.getState() != GameState.WAITING ? "re" : "") + "connected.";
         if (team != null) {
