@@ -41,7 +41,7 @@ public class PlayerListener implements Listener {
         plugin.getGame().getTimerBar().addPlayer(player);
         plugin.getLobby().checkPlayerRequirements();
 
-        HotbarApi.setCurrentHotbar(player, GameLobby.LOBBY_HOTBAR);
+        HotbarApi.setCurrentHotbar(player, Locale.GAME_LOBBY_HOTBAR);
 
         player.sendTitle(ChatColor.RED + "VALORANT","" , 10, 30, 10);
         event.setJoinMessage(null);
@@ -52,6 +52,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         plugin.getGame().getTimerBar().removePlayer(player);
         plugin.getLobby().checkPlayerRequirements();
+        plugin.getLobby().setVote(player, null);
 
         event.setQuitMessage(null);
     }

@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class GameSidebar implements ScoreboardAdapter {
@@ -37,23 +38,35 @@ public class GameSidebar implements ScoreboardAdapter {
             return;
         }
 
+        GameLobby lobby = plugin.getLobby();
+
         TeamType team = gamePlayer.getTeam();
         Agent selectedAgent = plugin.getAgentManager().getAgent(player);
 
         lines.add(ChatColor.GRAY + game.getState().getFriendlyName());
         lines.add(" ");
-        lines.add(ChatColor.WHITE + "Team: " + team.getColor() + team.getName());
-        if (team != TeamType.NONE) {
-            lines.add(ChatColor.WHITE + "Selected Agent:");
-            lines.add(selectedAgent == null ? ChatColor.RED + "None" : selectedAgent.getDisplayName());
-        }
-        lines.add("  ");
-        if (game.getState() == GameState.WAITING) {
-            lines.add(ChatColor.WHITE + "Players: ");
-            lines.add(ChatColor.RED.toString() + Bukkit.getOnlinePlayers().size() + "/" + GameLobby.REQUIRED_PLAYERS);
-        } else if (game.getState() == GameState.STARTING) {
-            lines.add(ChatColor.WHITE + "Starting in: ");
-            lines.add(ChatColor.RED + TimeUtils.formatIntoMMSS(game.getTimer()));
+
+        if (game.getState() == GameState.WAITING || game.getState() == GameState.STARTING) {
+            lines.add(ChatColor.WHITE + "Players: " + ChatColor.RED + Bukkit.getOnlinePlayers().size() + "/" + GameLobby.REQUIRED_PLAYERS);
+            if (game.getState() == GameState.STARTING) {
+                lines.add(ChatColor.WHITE + "Starting in: " + ChatColor.RED + TimeUtils.formatIntoMMSS(game.getTimer()));
+            }
+            lines.add("  ");
+            // When a map has been decided (only if required players
+            // lines.add(ChatColor.WHITE + "Chosen map:");
+            lines.add(ChatColor.WHITE + "Map Votes:");
+            int i = 0;
+            for (Map.Entry<String, Integer> entry : lobby.getVotes().entrySet()) {
+                lines.add("  " + ChatColor.WHITE + entry.getKey() + ": " + ChatColor.RED + entry.getValue());
+                if (i++ == 5) break;
+            }
+        } else {
+            lines.add(ChatColor.WHITE + "Team: " + team.getColor() + team.getName());
+            if (team != TeamType.NONE) {
+                lines.add(ChatColor.WHITE + "Selected Agent:");
+                lines.add(selectedAgent == null ? ChatColor.RED + "None" : selectedAgent.getDisplayName());
+            }
+            lines.add("  ");
         }
 
         // Footer/Header

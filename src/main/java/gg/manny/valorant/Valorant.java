@@ -37,10 +37,10 @@ public class Valorant extends JavaPlugin {
 
     private static Valorant instance;
 
+    private MapManager mapManager;
+
     private Game game;
     private GameLobby lobby;
-
-    private MapManager mapManager;
     private AgentManager agentManager;
     private TeamManager teamManager;
     private PlayerManager playerManager;
@@ -49,10 +49,10 @@ public class Valorant extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        mapManager = new MapManager(this);
+
         game = new Game(this);
         lobby = new GameLobby(this);
-
-        mapManager = new MapManager(this);
 
         agentManager = new AgentManager(this);
 

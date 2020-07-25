@@ -2,16 +2,15 @@ package gg.manny.valorant.game;
 
 import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
-import gg.manny.valorant.agent.menu.AgentSelector;
-import gg.manny.valorant.team.menu.TeamSelectMenu;
+import gg.manny.valorant.map.GameMap;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.ipvp.ingot.Hotbar;
-import org.ipvp.ingot.Slot;
-import org.ipvp.ingot.type.VanillaHotbar;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 // - - - - Lobby logic - - - - -
 // Players teleport to waiting room (Use default world ("world") spawn location)
@@ -36,36 +35,54 @@ public class GameLobby implements Listener {
 
     public static final int REQUIRED_PLAYERS = 2; // DEFAULT IS 10
 
-    public static Hotbar LOBBY_HOTBAR = new VanillaHotbar();
-
     private final Valorant plugin;
     private final Game game;
+
+    public Map<String, List<UUID>> votes = new LinkedHashMap<>(); // Sorted to ensure Random is always first
 
     public GameLobby(Valorant plugin) {
         this.plugin = plugin;
         this.game = plugin.getGame();
 
-        loadHotbars();
+        votes.put("Random", new ArrayList<>());
+        for (GameMap map : plugin.getMapManager().getMaps()) {
+            votes.put(map.getName(), new ArrayList<>());
+        }
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private void loadHotbars() {
-        Slot slot = LOBBY_HOTBAR.getSlot(1);
-        slot.setItem(new ItemStack(Material.BOOK));
-        slot.setActionHandler((player, action) -> {
-            if (action.getType().isRightClick()) {
-                new AgentSelector().openMenu(player);
+    /** Returns what map a player has selected */
+    public boolean hasVoted(Player player, String map) {
+        for (Map.Entry<String, List<UUID>> entry : votes.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(map) && entry.getValue().contains(player.getUniqueId())) {
+                return true;
             }
-        });
+        }
+        return false;
+    }
 
-        slot = LOBBY_HOTBAR.getSlot(0);
-        slot.setItem(new ItemStack(Material.CLOCK));
-        slot.setActionHandler((player, action) -> {
-            if (action.getType().isRightClick()) {
-                new TeamSelectMenu().openMenu(player);
+    public void setVote(Player player, String map) {
+        for (Map.Entry<String, List<UUID>> entry : votes.entrySet()) {
+            if (!entry.getKey().equalsIgnoreCase(map)) {
+                entry.getValue().remove(player.getUniqueId());
             }
-        });
+        }
+
+        if (map != null) {
+            votes.get(map).add(player.getUniqueId());
+        }
+    }
+
+
+    public Map<String, Integer> getVotes() {
+        return votes.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().size())).entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
     }
 
     public void checkPlayerRequirements() {
