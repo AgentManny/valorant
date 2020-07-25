@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TeamMenu extends Menu {
+public class TeamSelectMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {

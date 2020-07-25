@@ -3,6 +3,7 @@ package gg.manny.valorant;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gg.manny.valorant.agent.AgentManager;
+import gg.manny.valorant.command.DebugCommand;
 import gg.manny.valorant.command.MapCommand;
 import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
@@ -77,6 +78,9 @@ public class Valorant extends JavaPlugin {
         SpigotConfig.unknownCommandMessage = Locale.SYSTEM_PREFIX + "Command not found"; // Change our unknown command to valorant's automatically
         Commodore commodore = CommodoreProvider.getCommodore(this);
         try {
+
+            getCommand("debug").setExecutor(new DebugCommand(this));
+
             PluginCommand command = getCommand("map");
             command.setExecutor(new MapCommand(this));
 

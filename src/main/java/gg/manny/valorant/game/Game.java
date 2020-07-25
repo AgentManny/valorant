@@ -1,5 +1,6 @@
 package gg.manny.valorant.game;
 
+import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.map.GameMap;
 import gg.manny.valorant.team.GameTeam;
@@ -38,6 +39,14 @@ public class Game {
         timerBar = Bukkit.createBossBar(state.getName(), BarColor.RED, BarStyle.SOLID);
 
         task = instance.getServer().getScheduler().runTaskTimer(instance, this::tick, 20L, 20L);
+    }
+
+    public void start() {
+        Bukkit.broadcastMessage(Locale.SYSTEM_PREFIX + "Game started");
+        state = GameState.STARTED;
+        startedAt = System.currentTimeMillis();
+        startingIn = -1L;
+
     }
 
     public void tick() {

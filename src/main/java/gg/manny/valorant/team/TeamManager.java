@@ -15,11 +15,11 @@ public class TeamManager {
 
     private final Valorant plugin;
 
-    private GameTeam<GamePlayer> teamA = new GameTeam<>();
-    private GameTeam<GamePlayer> teamB = new GameTeam<>();
-    private GameTeam<GamePlayer> teamSpectator = new GameTeam<>();
+    private GameTeam teamA = new GameTeam();
+    private GameTeam teamB = new GameTeam();
+    private GameTeam teamSpectator = new GameTeam();
 
-    private Map<TeamType, GameTeam<GamePlayer>> players = new HashMap<>();
+    private Map<TeamType, GameTeam> players = new HashMap<>();
 
     public TeamManager(Valorant plugin) {
         this.plugin = plugin;
@@ -41,7 +41,7 @@ public class TeamManager {
     }
 
     public boolean containsPlayer(Player player) {
-        for (GameTeam<GamePlayer> team : players.values()) {
+        for (GameTeam team : players.values()) {
             if (team.containsPlayer(player)) {
                 return true;
             }
@@ -73,14 +73,14 @@ public class TeamManager {
         players.get(team).addPlayer(gamePlayer);
     }
 
-    public GameTeam<GamePlayer> getTeam(TeamType type) {
+    public GameTeam getTeam(TeamType type) {
         if (type == TeamType.NONE) return null;
 
         return players.get(type);
     }
 
-    public Pair<TeamType, GameTeam<GamePlayer>> getTeam(Player player) {
-        for (Map.Entry<TeamType, GameTeam<GamePlayer>> entry : players.entrySet()) {
+    public Pair<TeamType, GameTeam> getTeam(Player player) {
+        for (Map.Entry<TeamType, GameTeam> entry : players.entrySet()) {
             if (entry.getValue().containsPlayer(player)) {
                 return Pair.of(entry.getKey(), entry.getValue());
             }

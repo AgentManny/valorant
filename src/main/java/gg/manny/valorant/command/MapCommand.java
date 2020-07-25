@@ -73,8 +73,16 @@ public class MapCommand implements CommandExecutor {
             }
 
             sender.sendMessage(Locale.SYSTEM_PREFIX + "Removed"  + map.getName() + ".");
-        }
+        } else if (args[0].equalsIgnoreCase("location")) {
+            if (args.length == 1) {
+                sender.sendMessage(ChatColor.RED + "Usage: /map location <list|add|remove> [name]");
+                return true;
+            }
 
+            if (args[1].equalsIgnoreCase("list")) {
+
+            }
+        }
         return true;
     }
 }

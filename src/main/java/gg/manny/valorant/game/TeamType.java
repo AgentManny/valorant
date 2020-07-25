@@ -31,7 +31,7 @@ public enum TeamType {
         return color + "(" + name + ") " + ChatColor.WHITE;
     }
 
-    public GameTeam<GamePlayer> getTeam() {
+    public GameTeam getTeam() {
         return Valorant.getInstance().getTeamManager().getTeam(this);
     }
 

@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 
         Game game = plugin.getGame();
         GamePlayer gamePlayer = plugin.getPlayerManager().create(player.getUniqueId(), player.getName(), false);
-        GameTeam<GamePlayer> team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());
+        GameTeam team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());
 
         String message = Locale.SYSTEM_PREFIX + player.getName() + " has " + (team != null && game.getState() != GameState.WAITING ? "re" : "") + "connected.";
         if (team != null) {

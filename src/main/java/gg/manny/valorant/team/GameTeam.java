@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-public class GameTeam<T extends GamePlayer> {
+public class GameTeam {
 
-    private Set<T> gamePlayers = new HashSet<>();
+    private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     public boolean containsPlayer(Player player) {
-        for (T gamePlayer : this.gamePlayers) {
+        for (GamePlayer gamePlayer : this.gamePlayers) {
             if (gamePlayer.getUuid().equals(player.getUniqueId())) {
                 return true;
             }
@@ -24,17 +24,17 @@ public class GameTeam<T extends GamePlayer> {
         return false;
     }
 
-    public void addPlayer(T player) {
+    public void addPlayer(GamePlayer player) {
         this.gamePlayers.add(player);
     }
 
-    public void removePlayer(T player) {
+    public void removePlayer(GamePlayer player) {
         this.gamePlayers.remove(player);
     }
 
 
     public GamePlayer getGamePlayer(Player player) {
-        for (T gamePlayer : this.gamePlayers) {
+        for (GamePlayer gamePlayer : this.gamePlayers) {
             if (gamePlayer.getUuid().equals(player.getUniqueId())) {
                 return gamePlayer;
             }
@@ -62,8 +62,8 @@ public class GameTeam<T extends GamePlayer> {
      *
      * @return A list of team players that are alive.
      */
-    public List<T> getAlivePlayers() {
-        List<T> alive = new ArrayList<>();
+    public List<GamePlayer> getAlivePlayers() {
+        List<GamePlayer> alive = new ArrayList<>();
 
         this.gamePlayers.forEach(player -> {
             if (player.isAlive()) {
@@ -88,7 +88,7 @@ public class GameTeam<T extends GamePlayer> {
 
         int alive = 0;
 
-        for (T player : this.gamePlayers) {
+        for (GamePlayer player : this.gamePlayers) {
             if (player.isAlive()) {
                 alive++;
             }
@@ -108,8 +108,8 @@ public class GameTeam<T extends GamePlayer> {
      *
      * @return A list of team players that are dead.
      */
-    public List<T> getDeadGamePlayers() {
-        List<T> dead = new ArrayList<>();
+    public List<GamePlayer> getDeadGamePlayers() {
+        List<GamePlayer> dead = new ArrayList<>();
         this.gamePlayers.forEach(player -> {
             if (!player.isAlive()) {
                 dead.add(player);
