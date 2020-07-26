@@ -2,10 +2,13 @@ package gg.manny.valorant.command;
 
 import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
+import gg.manny.valorant.ability.sage.SlowOrb;
+import gg.manny.valorant.agent.menu.AgentSelector;
 import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.game.GameState;
 import gg.manny.valorant.game.TeamType;
+import gg.manny.valorant.listener.TestListener;
 import gg.manny.valorant.team.GameTeam;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -15,6 +18,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
 public class DebugCommand implements CommandExecutor {
@@ -34,10 +38,32 @@ public class DebugCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "/debug lobby");
             sender.sendMessage(ChatColor.RED + "/debug winners");
             sender.sendMessage(ChatColor.RED + "/debug forcestart");
+            sender.sendMessage(ChatColor.RED + "/debug agent");
             return true;
         }
         Game game = plugin.getGame();
-        if (args[0].equalsIgnoreCase("game")) {
+        if (args[0].equalsIgnoreCase("speed")) {
+            if (args.length == 1) return true;
+
+            double speed = Double.parseDouble(args[1]);
+            TestListener.SPEED_REDUCER = speed;
+            sender.sendMessage(ChatColor.GREEN + "Speed set to " + speed + " for projectiles.");
+        } else  if (args[0].equalsIgnoreCase("volume")) {
+            if (args.length == 1) return true;
+
+            float volume = Float.parseFloat(args[1]);
+            SlowOrb.volume = volume;
+            sender.sendMessage(ChatColor.GREEN + "Volume set to " + volume + " for Slow Orb sound.");
+        } else  if (args[0].equalsIgnoreCase("pitch")) {
+            if (args.length == 1) return true;
+
+            float volume = Float.parseFloat(args[1]);
+            SlowOrb.pitch = volume;
+            sender.sendMessage(ChatColor.GREEN + "Pitch set to " + volume + " for Slow Orb sound.");
+
+        } else if (args[0].equalsIgnoreCase("agent")) {
+            new AgentSelector().openMenu((Player) sender);
+        } else if (args[0].equalsIgnoreCase("game")) {
             sender.sendMessage(ChatColor.RED + "--- Game ---");
             sender.sendMessage("Map: " + (game.getMap() == null ? "None" : game.getMap().getName()));
             sender.sendMessage("State: " + game.getState().getFriendlyName() + " [" + game.getState().name() + "]");

@@ -4,12 +4,13 @@ package gg.manny.valorant.ability.cypher;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import gg.manny.valorant.ability.Ability;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
@@ -28,7 +29,7 @@ public class Spycam extends Ability {
     private static int CAMERA_RADIUS = 20;
 
     private Map<UUID, EntityArmorStand> hovering = new HashMap<>();
-    private Map<UUID, ArmorStand> activeCamera = new HashMap<>();
+    private Map<UUID, PlayerSpycam> activeCamera = new HashMap<>();
 
     public Spycam() {
         super("Spycam", AbilitySkill.SIGNATURE, AbilityPrice.FREE);
@@ -55,18 +56,28 @@ public class Spycam extends Ability {
         player.sendMessage("Looking at: " + player.getLocation().getPitch());
     }
 
+    @RequiredArgsConstructor
+    private class PlayerSpycam {
+
+        private final ArmorStand cameraEntity; // Camera's position
+
+        private Location lastLoc;
+        private boolean watching = false;
+
+    }
+
     @Override
     public boolean activate(Player player, HotbarAction action) {
         ActionHandler.ActionType actionType = action.getType();
         if (actionType == ActionHandler.ActionType.LEFT_CLICK) {
             if (hovering.containsKey(player.getUniqueId())) { // Check if they are looking at their camera and remove it if they are shifting?
-
                 EntityArmorStand entity = hovering.get(player.getUniqueId());
                 Location location = entity.getBukkitEntity().getLocation();
                 ArmorStand armorStand = player.getWorld().spawn(location, ArmorStand.class);
                 armorStand.setArms(false);
                 armorStand.setGravity(false);
                 armorStand.setBasePlate(false);
+                armorStand.setHelmet(((CraftArmorStand)entity.getBukkitEntity()).getHelmet());
                 //armorStand.setHeadPose(entity.getbuk);
                 Location location1 = armorStand.getLocation();
                 location1.setX(location.getX());
@@ -76,18 +87,30 @@ public class Spycam extends Ability {
                 location1.setPitch(location.getPitch());
                 location1.setDirection(location.getDirection());
                 player.sendMessage(ChatColor.GRAY + "DEBUG: Spycam has been added to " + "(" + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
-                activeCamera.put(player.getUniqueId(), armorStand);
+                PlayerSpycam playerSpycam = new PlayerSpycam(armorStand);
+                playerSpycam.lastLoc = player.getLocation();
+
+                activeCamera.put(player.getUniqueId(), playerSpycam);
                 hovering.remove(player.getUniqueId());
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entity.getId()));
+                // ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entity.getId()));
             }
         } else if (actionType == ActionHandler.ActionType.RIGHT_CLICK) {
             if (activeCamera.containsKey(player.getUniqueId())) {
 
-                ArmorStand entity = activeCamera.get(player.getUniqueId());
-                player.setGameMode(GameMode.SPECTATOR);
+                PlayerSpycam playerSpycam = activeCamera.get(player.getUniqueId());
+                playerSpycam.watching = !playerSpycam.watching;
+                player.sendMessage(playerSpycam.watching ? "You are now watching your camera" : "You are no longer watching your camera");
 
-                player.setSpectatorTarget(entity);
-                player.sendMessage(ChatColor.RED + "Spectating armor stand.");
+                if (playerSpycam.watching) {
+                    playerSpycam.lastLoc = player.getLocation();
+
+                    playerSpycam.cameraEntity.setPassenger(player);
+
+                } else {
+                    player.eject();
+                    player.teleport(playerSpycam.lastLoc);
+                    playerSpycam.lastLoc = null;
+                }
             } else {
                 player.sendMessage(ChatColor.RED + "You don't have a Camera active");
             }

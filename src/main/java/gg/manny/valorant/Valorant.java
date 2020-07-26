@@ -7,7 +7,9 @@ import gg.manny.valorant.command.DebugCommand;
 import gg.manny.valorant.command.MapCommand;
 import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
+import gg.manny.valorant.listener.AbilityListener;
 import gg.manny.valorant.listener.PlayerListener;
+import gg.manny.valorant.listener.TestListener;
 import gg.manny.valorant.map.MapManager;
 import gg.manny.valorant.player.PlayerManager;
 import gg.manny.valorant.sidebar.GameSidebar;
@@ -17,7 +19,10 @@ import lombok.Getter;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.CommodoreProvider;
 import me.lucko.commodore.file.CommodoreFileFormat;
+import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.ingot.HotbarFunctionListener;
 import org.spigotmc.SpigotConfig;
@@ -63,6 +68,8 @@ public class Valorant extends JavaPlugin {
 
         Arrays.asList(
                 new PlayerListener(this),
+                new AbilityListener(),
+                new TestListener(), // Debug for testing
                 new HotbarFunctionListener()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
@@ -72,6 +79,9 @@ public class Valorant extends JavaPlugin {
     @Override
     public void onDisable() {
         mapManager.save();
+        for (World world : getServer().getWorlds()) {
+            world.getEntitiesByClasses(ArmorStand.class).forEach(Entity::remove); // Nearly every armor stand used is for abilities
+        }
     }
 
     private void registerCommands() {

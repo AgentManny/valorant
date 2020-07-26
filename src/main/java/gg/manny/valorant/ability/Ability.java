@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.ingot.HotbarAction;
 
@@ -58,6 +59,10 @@ public abstract class Ability {
     public abstract boolean activate(Player player, HotbarAction action);
 
     public void tick(Player player) {
+
+    }
+
+    public void onProjectileHit(ProjectileHitEvent event) {
 
     }
 
