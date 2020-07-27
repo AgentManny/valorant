@@ -26,6 +26,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Particle API -->
+        <dependency>
+            <groupId>xyz.xenondevs</groupId>
+            <artifactId>particle</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>

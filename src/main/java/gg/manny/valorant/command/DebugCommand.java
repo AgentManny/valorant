@@ -48,6 +48,13 @@ public class DebugCommand implements CommandExecutor {
             double speed = Double.parseDouble(args[1]);
             TestListener.SPEED_REDUCER = speed;
             sender.sendMessage(ChatColor.GREEN + "Speed set to " + speed + " for projectiles.");
+        } else  if (args[0].equalsIgnoreCase("task")) {
+            if (TestListener.ACTIVE_TASK == null || !Bukkit.getScheduler().isCurrentlyRunning(TestListener.ACTIVE_TASK.getTaskId())) {
+                sender.sendMessage(ChatColor.RED + "Task not active.");
+                return true;
+            }
+            TestListener.ACTIVE_TASK.cancel();
+            sender.sendMessage("Cancelled task");
         } else  if (args[0].equalsIgnoreCase("volume")) {
             if (args.length == 1) return true;
 
