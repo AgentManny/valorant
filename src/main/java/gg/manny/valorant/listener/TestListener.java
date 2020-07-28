@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
 import xyz.xenondevs.particle.ParticleEffect;
 
 import java.awt.Color;
@@ -26,7 +25,7 @@ public class TestListener implements Listener {
 
     public static ParticleEffect RECON_PARTICLE = ParticleEffect.REDSTONE;
     public static Color RECON_COLOR = Color.ORANGE;
-    public static int RECON_RADIUS = 25;
+    public static int RECON_RADIUS = 5;
     public static long RECON_TIME = TimeUnit.SECONDS.toMillis(5);
 
     @EventHandler
@@ -97,37 +96,33 @@ public class TestListener implements Listener {
                             if (effectLocation.getBlock().isPassable()) {
                                     RECON_PARTICLE.display(effectLocation, RECON_COLOR);
                                 } else {
-                                    for (int y = 0; y < effectLocation.getBlockY() + 10; y++) {
-                                        Location newLocation = effectLocation.clone();
-                                        newLocation.setY(y);
-                                        Location pog;
-                                        int check = 0;
-                                        if (newLocation.getBlock().getType() != Material.AIR) {
+                                int yDiff = 3;
+                                for (int y = effectLocation.getBlockY() - yDiff; y < effectLocation.getBlockY() + yDiff; y++) {
+                                    Location effectLoc = effectLocation.clone();
+                                    Location difference = effectLoc.clone().subtract(centerLoc);
 
-                                            if ((pog = newLocation.clone().add(1, 0, 0)).getBlock().getType() == Material.AIR) {
+                                    double diffAdd = 1.0;
+                                    double diffX = difference.getX();
+                                    double diffZ = difference.getZ();
 
-                                            } else if ((pog = newLocation.clone().add(0, 0, 1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(1, 0, 1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(1, 0, -1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(-1, 0, 1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(-1, 0, 0)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(0, 0, -1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(0, 0, -1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            } else if ((pog = newLocation.clone().add(-1, 0, -1)).getBlock().getType() == Material.AIR) {
-                                                newLocation = pog;
-                                            }
-                                            if (pog.getBlock().getType() == Material.AIR) {
-                                                RECON_PARTICLE.display(pog, Color.MAGENTA);
-                                            }
+                                    effectLoc.setY(y);
+                                    if (Math.abs(diffX) > Math.abs(diffZ)) {
+                                        if (diffX > 0) {
+                                            effectLoc.add(-diffAdd, 0, 0);
+                                        } else {
+                                            effectLoc.add(diffAdd, 0, 0);
+                                        }
+                                    } else {
+                                        if (diffZ > 0) {
+                                            effectLoc.add(0, 0, -diffAdd);
+                                        } else {
+                                            effectLoc.add(0, 0, diffAdd);
                                         }
                                     }
+                                    if (effectLoc.getBlock().getType() == Material.AIR) {
+                                        RECON_PARTICLE.display(effectLoc, Color.CYAN);
+                                    }
+                                }
                             }
                         }
                     }
