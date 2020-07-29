@@ -24,6 +24,8 @@ public class GamePlayer {
     private Agent selectedAgent;
     private TeamType team = TeamType.NONE;
 
+    private PlayerMeta meta = new PlayerMeta();
+
     private Map<Ability, Integer> cooldowns = new HashMap<>();
     private int ultimatePoints = 0;
 
@@ -34,6 +36,7 @@ public class GamePlayer {
 
     public void cleanup() { // Activates every new round
         cooldowns.clear();
+        meta.reset();
     }
 
     public void reset() { // Activates when half time they switch.

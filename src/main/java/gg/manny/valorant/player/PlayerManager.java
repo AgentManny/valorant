@@ -17,6 +17,10 @@ public class PlayerManager {
 
     public PlayerManager(Valorant plugin) {
         this.plugin = plugin;
+
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            getOrCreate(player.getUniqueId(), player.getName(), false);
+        }
     }
 
     public GamePlayer getOrCreate(UUID id, String name, boolean cache) {
