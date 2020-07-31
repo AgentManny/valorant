@@ -31,6 +31,10 @@ public abstract class Ability {
         return getColor() + this.name;
     }
 
+    public String getId() {
+        return name.toUpperCase().replace(" ", "_");
+    }
+
     public int getSlot() {
         return skill.getSlot(); // Some stuff like Reyna abilities override slot data
     }

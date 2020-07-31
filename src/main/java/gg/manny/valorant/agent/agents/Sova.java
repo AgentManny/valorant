@@ -1,6 +1,6 @@
 package gg.manny.valorant.agent.agents;
 
-import gg.manny.valorant.ability.sova.ReconDart;
+import gg.manny.valorant.ability.sova.darts.ReconDart;
 import gg.manny.valorant.agent.Agent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

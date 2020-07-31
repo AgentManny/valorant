@@ -1,5 +1,7 @@
-package gg.manny.valorant.ability.sova;
+package gg.manny.valorant.ability.sova.darts;
 
+import gg.manny.valorant.ability.sova.Dart;
+import org.bukkit.Color;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +12,11 @@ public class ReconDart extends Dart {
 
     public ReconDart() {
         super("Recon Dart", AbilitySkill.SIGNATURE, AbilityPrice.FREE);
+    }
+
+    @Override
+    public Color getArrowParticles() {
+        return Color.ORANGE;
     }
 
     @Override
