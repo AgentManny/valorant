@@ -22,6 +22,7 @@ import me.lucko.commodore.file.CommodoreFileFormat;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.ingot.HotbarFunctionListener;
@@ -80,7 +81,7 @@ public class Valorant extends JavaPlugin {
     public void onDisable() {
         mapManager.save();
         for (World world : getServer().getWorlds()) {
-            world.getEntitiesByClasses(ArmorStand.class).forEach(Entity::remove); // Nearly every armor stand used is for abilities
+            world.getEntitiesByClasses(ArmorStand.class, Arrow.class).forEach(Entity::remove); // Nearly every armor stand used is for abilities
         }
     }
 

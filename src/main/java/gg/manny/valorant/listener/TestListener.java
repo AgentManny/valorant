@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 import xyz.xenondevs.particle.ParticleEffect;
 
 import java.awt.Color;
@@ -25,9 +26,10 @@ public class TestListener implements Listener {
 
     public static ParticleEffect RECON_PARTICLE = ParticleEffect.REDSTONE;
     public static Color RECON_COLOR = Color.ORANGE;
-    public static int RECON_RADIUS = 5;
+    public static int RECON_RADIUS = 25;
     public static long RECON_TIME = TimeUnit.SECONDS.toMillis(5);
 
+    /*
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -64,12 +66,16 @@ public class TestListener implements Listener {
                 ACTIVE_TASK = new BukkitRunnable() {
 
                     long timestamp = System.currentTimeMillis();
+                    int particlesFloor = 0;
+                    int particleHeight = 0;
+                    int particleHeightAir = 0;
+                    boolean detectedPlayer = false;
 
                     @Override
                     public void run() {
                         if (System.currentTimeMillis() - timestamp > RECON_TIME) {
                             cancel();
-                            debug("Recon", "Finished tracing", "Cancelled");
+                            debug("Recon", "Completed", "X Particles: " + particlesFloor, "Y Particles" + particleHeight + " [Excluded: " + (particleHeightAir - particleHeight) + "]", "Total: " + (particlesFloor + particleHeight));
                             return;
                         }
 
@@ -79,48 +85,52 @@ public class TestListener implements Listener {
                             if (points % 5 == 0) continue;
                             if (radius >= RECON_RADIUS) {
                                 radius = count[0] = 1;
+                                detectedPlayer = false;
                                 continue;
+                            }
+
+                            Player player = Bukkit.getPlayer("Mannys");
+                            if (player != null && player.isSneaking()) {
+                                faceDirection(player, centerLoc);
                             }
 
                             double angle = Math.toRadians((double) i / points * 360d);
                             double x = locX + Math.cos(angle) * radius;
                             double z = locZ + Math.sin(angle) * radius;
 
-                            // Use location to detect block and whether it should go up
                             Location effectLocation = new Location(world, x, locY + 0.1, z);
-
-                            if (effectLocation.getBlock().getType() != Material.AIR) {
-                                // debug("Recon", effectLocation.getBlock().getType().name(), effectLocation.getBlock().isPassable() + "");
-                            }
-
                             if (effectLocation.getBlock().isPassable()) {
-                                    RECON_PARTICLE.display(effectLocation, RECON_COLOR);
-                                } else {
-                                int yDiff = 3;
-                                for (int y = effectLocation.getBlockY() - yDiff; y < effectLocation.getBlockY() + yDiff; y++) {
-                                    Location effectLoc = effectLocation.clone();
-                                    Location difference = effectLoc.clone().subtract(centerLoc);
+                                RECON_PARTICLE.display(effectLocation, detectedPlayer ? Color.RED : RECON_COLOR);
+                                particlesFloor++;
 
-                                    double diffAdd = 1.0;
+                            } else {
+                                int yDiff = 10;
+                                double offset = 0.5;
+                                for (int y = effectLocation.getBlockY() - yDiff; y < effectLocation.getBlockY() + yDiff; y++) {
+                                    Location location = effectLocation.clone();
+                                    Location difference = location.clone().subtract(centerLoc);
+
                                     double diffX = difference.getX();
                                     double diffZ = difference.getZ();
 
-                                    effectLoc.setY(y);
-                                    if (Math.abs(diffX) > Math.abs(diffZ)) {
-                                        if (diffX > 0) {
-                                            effectLoc.add(-diffAdd, 0, 0);
+                                    location.setY(y);
+                                    if (location.getBlock().getType() != Material.AIR) { // Only adds an offset if location is a block
+                                        if (Math.abs(diffX) > Math.abs(diffZ)) {
+                                            if (diffX > 0) {
+                                                location.add(-offset, 0, 0);
+                                            } else {
+                                                location.add(offset, 0, 0);
+                                            }
                                         } else {
-                                            effectLoc.add(diffAdd, 0, 0);
+                                            if (diffZ > 0) {
+                                                location.add(0, 0, -offset);
+                                            } else {
+                                                location.add(0, 0, offset);
+                                            }
                                         }
-                                    } else {
-                                        if (diffZ > 0) {
-                                            effectLoc.add(0, 0, -diffAdd);
-                                        } else {
-                                            effectLoc.add(0, 0, diffAdd);
+                                        if (location.getBlock().getType() == Material.AIR) { // Don't send a particle if the new location isn't a block
+                                            RECON_PARTICLE.display(location, Color.CYAN);
                                         }
-                                    }
-                                    if (effectLoc.getBlock().getType() == Material.AIR) {
-                                        RECON_PARTICLE.display(effectLoc, Color.CYAN);
                                     }
                                 }
                             }
@@ -133,7 +143,14 @@ public class TestListener implements Listener {
         }
     }
 
+    public void faceDirection(Player player, Location target) {
+        Vector dir = target.clone().subtract(player.getEyeLocation()).toVector();
+        Location loc = player.getLocation().setDirection(dir);
+        player.teleport(loc);
+    }
+
     public static void debug(String key, String... messages) {
         Bukkit.broadcastMessage(ChatColor.YELLOW + "[Debug] [" + key + "]: (" + Strings.join(messages, ") (") + ")");
     }
+     */
 }

@@ -4,32 +4,30 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.ability.Ability;
+import gg.manny.valorant.ability.listeners.ProjectileAbility;
 import gg.manny.valorant.util.MathUtil;
 import net.minecraft.server.v1_15_R1.EntityArmorStand;
 import net.minecraft.server.v1_15_R1.Vector3f;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftArmorStand;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.ipvp.ingot.ActionHandler;
 import org.ipvp.ingot.HotbarAction;
+import xyz.xenondevs.particle.ParticleEffect;
+import xyz.xenondevs.particle.data.texture.BlockTexture;
 
 import java.util.UUID;
 
-public class SlowOrb extends Ability {
+public class SlowOrb extends Ability implements ProjectileAbility {
 
     private static final int COOLDOWN = 5;
     private static final int RADIUS = 3;
@@ -82,13 +80,23 @@ public class SlowOrb extends Ability {
         if (action == null) { // Hacky way of just adding
         } else if (action.getType() == ActionHandler.ActionType.RIGHT_CLICK) {
             Snowball projectile = player.launchProjectile(Snowball.class);
-            projectile.setMetadata(SLOW_ORB_METADATA, new FixedMetadataValue(Valorant.getInstance(), player.getUniqueId().toString())); // Store UUID for faster access we could also use Projectile#getShooter
+
+            SlowOrbVisual slowOrbVisual = new SlowOrbVisual();
+            slowOrbVisual.entity = projectile;
+            slowOrbVisual.runTaskTimer(Valorant.getInstance(), 2L, 2L);
+
+            projectile.setMetadata(SLOW_ORB_METADATA, new FixedMetadataValue(Valorant.getInstance(), slowOrbVisual)); // Store UUID for faster access we could also use Projectile#getShooter
             return true;
         }
         return false;
     }
 
-    public void activate(Player player, Location location) {
+    public void activate(Player player, Entity entity) {
+        Location location = entity.getLocation();
+        SlowOrbVisual value = (SlowOrbVisual) entity.getMetadata(SLOW_ORB_METADATA).get(0).value();
+        value.cancel();
+
+
         if (location.getBlock().getType() == Material.AIR) {
             location.subtract(0, 1, 0);
         }
@@ -106,15 +114,18 @@ public class SlowOrb extends Ability {
                     Material oldMaterial = block.getType();
                     Valorant.getInstance().getServer().getScheduler().runTaskLater(Valorant.getInstance(), () -> {
                         block.setType(oldMaterial);
-                    }, (20L * COOLDOWN) + (long)MathUtil.randomDouble(3, 10));
-                    block.setType(Material.BLUE_ICE);
+
+                    }, (20L * COOLDOWN) + (long) MathUtil.randomDouble(3, 10));
+                    if (oldMaterial != Material.AIR) {
+                        block.setType(Material.BLUE_ICE);
+                    }
                 }
             }
         }
 
         for (int i = 0; i < (RADIUS * 15); i++) {
-            ArmorStand entity = createEntity(location);
-            Valorant.getInstance().getServer().getScheduler().runTaskLater(Valorant.getInstance(), entity::remove, (20L * COOLDOWN) + (long)MathUtil.randomDouble(5, 20));
+            ArmorStand armorStand = createEntity(location);
+            Valorant.getInstance().getServer().getScheduler().runTaskLater(Valorant.getInstance(), armorStand::remove, (20L * COOLDOWN) + (long)MathUtil.randomDouble(5, 20));
         }
     }
 
@@ -136,10 +147,14 @@ public class SlowOrb extends Ability {
 
                 Snowball newEntity = entity.getWorld().spawn(event.getHitEntity() != null ? event.getHitEntity().getLocation() : entity.getLocation(), Snowball.class);
                 newEntity.setShooter(entity.getShooter());
-                newEntity.setMetadata(SLOW_ORB_METADATA, new FixedMetadataValue(Valorant.getInstance(), entity.getMetadata(SLOW_ORB_METADATA).get(0).asString()));
+
+                SlowOrbVisual value = (SlowOrbVisual) entity.getMetadata(SLOW_ORB_METADATA).get(0).value();
+                value.entity = newEntity;
+
+                newEntity.setMetadata(SLOW_ORB_METADATA, new FixedMetadataValue(Valorant.getInstance(), value));
                 newEntity.setVelocity(output);
             } else {
-                activate((Player) entity.getShooter(), entity.getLocation());
+                activate((Player) entity.getShooter(), entity);
             }
         }
     }
@@ -162,5 +177,20 @@ public class SlowOrb extends Ability {
         entity.setSmall(true);
         entity.setGravity(false);
         return entity;
+    }
+
+    private class SlowOrbVisual extends BukkitRunnable {
+
+        public Entity entity;
+
+        @Override
+        public void run() {
+            if (entity == null || entity.isDead()) {
+                cancel();
+                return;
+            }
+
+            ParticleEffect.BLOCK_CRACK.display(entity.getLocation(), 0f, 0f, 0f, 0f, 3, new BlockTexture(Material.BLUE_ICE), Bukkit.getOnlinePlayers());
+        }
     }
 }

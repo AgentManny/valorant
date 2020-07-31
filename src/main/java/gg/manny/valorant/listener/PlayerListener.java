@@ -3,13 +3,13 @@ package gg.manny.valorant.listener;
 import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.game.Game;
-import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.game.GameState;
 import gg.manny.valorant.player.GamePlayer;
 import gg.manny.valorant.team.GameTeam;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +17,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.ipvp.ingot.HotbarApi;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class PlayerListener implements Listener {
@@ -54,6 +56,7 @@ public class PlayerListener implements Listener {
         plugin.getLobby().checkPlayerRequirements();
         plugin.getLobby().setVote(player, null);
 
+        player.sendTitle("", "", 0, 0, 0); // Ensure titles don't stay (used for visuals)
         event.setQuitMessage(null);
     }
 
