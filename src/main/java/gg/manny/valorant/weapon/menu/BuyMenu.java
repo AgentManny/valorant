@@ -1,4 +1,4 @@
-package gg.manny.valorant.weapons.menu;
+package gg.manny.valorant.weapon.menu;
 
 import gg.manny.valorant.util.menu.Button;
 import gg.manny.valorant.util.menu.Menu;

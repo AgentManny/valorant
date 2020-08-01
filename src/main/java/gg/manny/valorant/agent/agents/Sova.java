@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public class Sova extends Agent {
+
     public Sova() {
         super("Sova", AgentCategory.INITIATOR);
 
