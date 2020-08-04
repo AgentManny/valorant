@@ -6,6 +6,8 @@ import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.game.GameState;
 import gg.manny.valorant.game.TeamType;
+import gg.manny.valorant.map.GameMap;
+import gg.manny.valorant.map.MapManager;
 import gg.manny.valorant.player.GamePlayer;
 import gg.manny.valorant.util.TimeUtils;
 import gg.manny.valorant.util.scoreboard.ScoreboardAdapter;
@@ -38,6 +40,7 @@ public class GameSidebar implements ScoreboardAdapter {
             return;
         }
 
+        MapManager mapManager = plugin.getMapManager();
         GameLobby lobby = plugin.getLobby();
 
         TeamType team = gamePlayer.getTeam();
@@ -46,7 +49,13 @@ public class GameSidebar implements ScoreboardAdapter {
         lines.add(ChatColor.GRAY + game.getState().getFriendlyName());
         lines.add(" ");
 
-        if (game.getState() == GameState.WAITING || game.getState() == GameState.STARTING) {
+        if (player.hasMetadata("debug")) {
+            GameMap locatedMap = mapManager.getMapByLocation(player.getLocation());
+            lines.add(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Debug mode");
+            lines.add("Map: " + ChatColor.RED + (locatedMap == null ? "None" : locatedMap.getName()));
+            lines.add("Callout: " + ChatColor.RED + (locatedMap == null ? "None" : locatedMap.getCalloutByLocation(player.getLocation())));
+            return;
+        } else if (game.getState() == GameState.WAITING || game.getState() == GameState.STARTING) {
             lines.add(ChatColor.WHITE + "Players: " + ChatColor.RED + Bukkit.getOnlinePlayers().size() + "/" + GameLobby.REQUIRED_PLAYERS);
             if (game.getState() == GameState.STARTING) {
                 lines.add(ChatColor.WHITE + "Starting in: " + ChatColor.RED + TimeUtils.formatIntoMMSS(game.getTimer()));

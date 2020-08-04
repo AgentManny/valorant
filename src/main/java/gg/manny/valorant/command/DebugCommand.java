@@ -21,6 +21,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import xyz.xenondevs.particle.ParticleEffect;
 
 @RequiredArgsConstructor
@@ -44,8 +45,19 @@ public class DebugCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "/debug agent");
             return true;
         }
+
         Player player = (Player) sender;
+
         Game game = plugin.getGame();
+        if (args[0].equalsIgnoreCase("toggle")) {
+            boolean newValue = !player.hasMetadata("debug");
+            player.sendMessage(Locale.SYSTEM_PREFIX + "You have " + ChatColor.LIGHT_PURPLE + (newValue ? "enabled" : "disabled") + ChatColor.RESET + " debug mode.");
+            if (newValue) {
+                player.setMetadata("debug", new FixedMetadataValue(Valorant.getInstance(), null));
+            } else {
+                player.removeMetadata("debug", Valorant.getInstance());
+            }
+        }
         if (args[0].equalsIgnoreCase("speed")) {
             if (args.length == 1) return true;
 

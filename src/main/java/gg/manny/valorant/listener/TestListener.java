@@ -2,6 +2,7 @@ package gg.manny.valorant.listener;
 
 import gg.manny.valorant.Valorant;
 import joptsimple.internal.Strings;
+import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -27,9 +28,9 @@ public class TestListener implements Listener {
     public static ParticleEffect RECON_PARTICLE = ParticleEffect.REDSTONE;
     public static Color RECON_COLOR = Color.ORANGE;
     public static int RECON_RADIUS = 25;
-    public static long RECON_TIME = TimeUnit.SECONDS.toMillis(5);
+    public static long RECON_TIME = TimeUnit.SECONDS.toMillis(30);
 
-    /*
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -63,6 +64,7 @@ public class TestListener implements Listener {
 
                 debug("Recon", "Started");
 
+
                 ACTIVE_TASK = new BukkitRunnable() {
 
                     long timestamp = System.currentTimeMillis();
@@ -89,18 +91,21 @@ public class TestListener implements Listener {
                                 continue;
                             }
 
-                            Player player = Bukkit.getPlayer("Mannys");
-                            if (player != null && player.isSneaking()) {
-                                faceDirection(player, centerLoc);
-                            }
-
                             double angle = Math.toRadians((double) i / points * 360d);
                             double x = locX + Math.cos(angle) * radius;
                             double z = locZ + Math.sin(angle) * radius;
 
+
+                            boolean danger = false;
+
+                            Player player = Bukkit.getPlayer("Mannys");
+                            if (player != null && player.isSneaking()) {
+                                danger = faceDirection(player, centerLoc);
+                            }
+
                             Location effectLocation = new Location(world, x, locY + 0.1, z);
                             if (effectLocation.getBlock().isPassable()) {
-                                RECON_PARTICLE.display(effectLocation, detectedPlayer ? Color.RED : RECON_COLOR);
+                                RECON_PARTICLE.display(effectLocation, danger ? Color.RED : RECON_COLOR);
                                 particlesFloor++;
 
                             } else {
@@ -143,14 +148,58 @@ public class TestListener implements Listener {
         }
     }
 
-    public void faceDirection(Player player, Location target) {
-        Vector dir = target.clone().subtract(player.getEyeLocation()).toVector();
+    public boolean faceDirection(Player player, Location centerLoc) {
+        Vector dir = centerLoc.clone().subtract(player.getEyeLocation()).toVector();
         Location loc = player.getLocation().setDirection(dir);
-        player.teleport(loc);
+
+        return drawLine(centerLoc, loc, 1);
+
+//        player.teleport(loc);
+    }
+
+    public boolean drawLine(
+            /* Would be your orange wool */Location point1,
+            /* Your white wool */ Location point2,
+            /*Space between each particle*/double space
+    ) {
+
+        World world = point1.getWorld();
+
+        /*Throw an error if the points are in different worlds*/
+        Validate.isTrue(point2.getWorld().equals(world), "Lines cannot be in different worlds!");
+
+        /*Distance between the two particles*/
+        double distance = point1.distance(point2);
+
+        /* The points as vectors */
+        Vector p1 = point1.toVector();
+        Vector p2 = point2.toVector();
+
+        /* Subtract gives you a vector between the points, we multiply by the space*/
+        Vector vector = p2.clone().subtract(p1).normalize().multiply(space);
+
+        /*The distance covered*/
+        double covered = 0;
+
+        boolean danger = false;
+
+        /* We run this code while we haven't covered the distance, we increase the point by the space every time*/
+        for (; covered < distance; p1.add(vector)) {
+            Location location = p1.toLocation(world);
+            if (!location.getBlock().isPassable()) {
+                return false;
+            }
+            /*Spawn the particle at the point*/
+          //  ParticleEffect.REDSTONE.display(p1.toLocation(world), location.getBlock().isPassable() ? Color.RED : Color.GREEN);
+
+            /* We add the space covered */
+            covered += space;
+        }
+        return true;
     }
 
     public static void debug(String key, String... messages) {
         Bukkit.broadcastMessage(ChatColor.YELLOW + "[Debug] [" + key + "]: (" + Strings.join(messages, ") (") + ")");
     }
-     */
+
 }

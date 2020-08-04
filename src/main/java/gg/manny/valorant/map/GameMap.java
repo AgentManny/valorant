@@ -2,11 +2,12 @@ package gg.manny.valorant.map;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import gg.manny.valorant.Valorant;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Location;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,6 +22,9 @@ public class GameMap {
 
     /** Returns the name of the map */
     private final String name;
+
+    /** Returns the author of a map */
+    private String author = "Unknown";
 
     /** Returns the description of a map, if it has any */
     @Setter
@@ -37,11 +41,23 @@ public class GameMap {
     public GameMap(String name, JsonObject data) {
         this.name = name;
         this.description = data.get("description").getAsString();
+        this.author = data.get("author").getAsString();
 
         if (data.has("locations") && data.get("locations").isJsonObject()) {
             JsonObject locations = data.getAsJsonObject("locations");
             locations.entrySet().forEach(entry -> this.locations.put(entry.getKey(), Valorant.GSON.fromJson(entry.getValue(), new TypeToken<Polygonal2DRegion>(){}.getType())));
         }
+    }
+
+    public String getCalloutByLocation(Location location) {
+        for (Map.Entry<String, Polygonal2DRegion> entry : locations.entrySet()) {
+            String callout = entry.getKey();
+            Polygonal2DRegion region = entry.getValue();
+            if (region.contains(BlockVector3.at(location.getX(), location.getY(), location.getZ()))) {
+                return callout;
+            }
+        }
+        return "Unknown";
     }
 
     // So we'll create a folder name "maps", the map will contain a JSON file of the map name
@@ -65,6 +81,7 @@ public class GameMap {
     private JsonObject getJson() {
         JsonObject data = new JsonObject();
         data.addProperty("name", name);
+        data.addProperty("author", author);
         data.addProperty("description", description);
 
         JsonObject locations = new JsonObject();
