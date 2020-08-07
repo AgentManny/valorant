@@ -4,6 +4,7 @@ import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.map.GameMap;
 import gg.manny.valorant.team.GameTeam;
+import gg.manny.valorant.team.TeamManager;
 import gg.manny.valorant.util.MathUtil;
 import gg.manny.valorant.util.TimeUtils;
 import lombok.Getter;
@@ -16,9 +17,14 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Map;
+
 @Getter
 @Setter
 public class Game {
+
+    private final Valorant instance;
+    private final TeamManager teamManager;
 
     private GameMap map;
 
@@ -35,6 +41,9 @@ public class Game {
     private Pair<TeamType, GameTeam> winners;
 
     public Game(Valorant instance) {
+        this.instance = instance;
+        this.teamManager = instance.getTeamManager();
+
         state = GameState.WAITING;
         timerBar = Bukkit.createBossBar(state.getName(), BarColor.RED, BarStyle.SOLID);
 
@@ -47,6 +56,11 @@ public class Game {
         startedAt = System.currentTimeMillis();
         startingIn = -1L;
 
+        for (Map.Entry<TeamType, GameTeam> entry : teamManager.getTeams().entrySet()) {
+            TeamType type = entry.getKey();
+            GameTeam team = entry.getValue();
+
+        }
     }
 
     public void tick() {

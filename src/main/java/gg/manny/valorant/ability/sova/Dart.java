@@ -50,11 +50,10 @@ public abstract class Dart extends Ability implements ProjectileAbility {
         if (type == ActionHandler.ActionType.LEFT_CLICK) {
             int newValue = power < MAX_DART_BOUNCE ? power + 1 : 0;
             meta.put(DART_BOUNCE + "_" + getId(), power = newValue);
-        } else if (type == ActionHandler.ActionType.RIGHT_CLICK && action.getClickedBlock().isPresent()) {
+        } else if (type == ActionHandler.ActionType.RIGHT_CLICK) {
             Optional<Block> block = action.getClickedBlock();
-            if (block.isPresent() && (block.get() instanceof Openable)) {
+            if (!(block.isPresent() && (block.get() instanceof Openable))) {
                 action.setCancelled(false); // Allow interacting
-            } else {
             }
         }
         int stayTime = type == ActionHandler.ActionType.UNHOVER ? 5 : 100000;
@@ -82,9 +81,9 @@ public abstract class Dart extends Ability implements ProjectileAbility {
     @Override
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile entity = event.getEntity();
-        if (entity.hasMetadata("Bounce") && entity.hasMetadata(getId())) {
+        if (entity.hasMetadata(getId())) {
             float force = entity.getMetadata("Force").get(0).asFloat();
-            int bounce = entity.getMetadata("Bounce").get(0).asInt();
+            int bounce = entity.hasMetadata(DART_BOUNCE + "_" + getId()) ? entity.getMetadata(DART_BOUNCE + "_" + getId()).get(0).asInt() : 0;
 
             float newForce = force / 1.25F;
 
@@ -144,7 +143,7 @@ public abstract class Dart extends Ability implements ProjectileAbility {
         arrow.setShooter(shooter);
         arrow.setMetadata(getId(), new FixedMetadataValue(Valorant.getInstance(), null));
         if (bounce > 0) {
-            arrow.setMetadata("Bounce", new FixedMetadataValue(Valorant.getInstance(), bounce));
+            arrow.setMetadata(DART_BOUNCE + "_" + getId(), new FixedMetadataValue(Valorant.getInstance(), bounce));
         }
         arrow.setMetadata("Force", new FixedMetadataValue(Valorant.getInstance(), force));
         arrow.setColor(getArrowParticles());

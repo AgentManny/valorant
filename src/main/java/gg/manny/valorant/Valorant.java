@@ -2,6 +2,8 @@ package gg.manny.valorant;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import gg.manny.valorant.agent.AgentManager;
 import gg.manny.valorant.command.DebugCommand;
 import gg.manny.valorant.command.MapCommand;
@@ -15,10 +17,14 @@ import gg.manny.valorant.player.PlayerManager;
 import gg.manny.valorant.sidebar.GameSidebar;
 import gg.manny.valorant.team.TeamManager;
 import gg.manny.valorant.util.scoreboard.MScoreboardHandler;
+import gg.manny.valorant.util.serialization.CuboidRegionAdapter;
+import gg.manny.valorant.util.serialization.LocationAdapter;
+import gg.manny.valorant.util.serialization.Polygonal2DRegionAdapter;
 import lombok.Getter;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.CommodoreProvider;
 import me.lucko.commodore.file.CommodoreFileFormat;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.ArmorStand;
@@ -37,6 +43,9 @@ public class Valorant extends JavaPlugin {
 
     public static final Random RANDOM = new Random();
     public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Polygonal2DRegion.class, new Polygonal2DRegionAdapter())
+            .registerTypeAdapter(CuboidRegion.class, new CuboidRegionAdapter())
+            .registerTypeAdapter(Location.class, new LocationAdapter())
             .serializeNulls()
             .setPrettyPrinting()
             .create();

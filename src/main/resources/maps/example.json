@@ -2,7 +2,62 @@
   "name": "Example",
   "author": "Unknown",
   "description": "An example map",
-  "locations": {
-    "Short A": null
+  "orbs": [
+    {
+      "x": 0,
+      "y": 100,
+      "z": 0
+    },
+    {
+      "x": 10,
+      "y": 60,
+      "z": 10
+    }
+  ],
+  "spawn_points": {
+    "ATTACKERS": [
+      {
+        "x": 10,
+        "y": 60,
+        "z": 10,
+        "yaw": 90,
+        "pitch": 90
+      }
+    ],
+    "DEFENDERS": [
+      {
+        "x": 20,
+        "y": 82,
+        "z": 20,
+        "yaw": -90,
+        "pitch": -90
+      }
+    ]
+  },
+  "plant_sites": [
+    {
+      "pos1": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "pos2": {
+        "x": 20,
+        "y": 100,
+        "z": 20
+      }
+    }
+  ],
+  "callouts": {
+    "A Site": [
+      {
+        "x": 0,
+        "z": 10
+      },
+      {
+        "x": 30,
+        "z": 50
+      }
+    ]
   }
 }

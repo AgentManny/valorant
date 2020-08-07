@@ -12,7 +12,19 @@ map {
   setdescription {
     description brigadier:string greedy_phrase;
   }
+  author {
+      description brigadier:string greedy_phrase;
+  }
   locations {
+    add {
+        location brigadier:string greedy_phrase;
+    }
+    remove {
+        location brigadier:string greedy_phrase;
+    }
+    list;
+  }
+  location {
     add {
         location brigadier:string greedy_phrase;
     }

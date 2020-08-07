@@ -3,6 +3,7 @@ package gg.manny.valorant.team;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.game.TeamType;
 import gg.manny.valorant.player.GamePlayer;
+import lombok.Getter;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -19,15 +20,15 @@ public class TeamManager {
     private GameTeam teamB = new GameTeam();
     private GameTeam teamSpectator = new GameTeam();
 
-    private Map<TeamType, GameTeam> players = new HashMap<>();
+    @Getter private Map<TeamType, GameTeam> teams = new HashMap<>();
 
     public TeamManager(Valorant plugin) {
         this.plugin = plugin;
 
         boolean randomTeam = Valorant.RANDOM.nextBoolean();
-        players.put(TeamType.ATTACKERS, randomTeam ? teamA : teamB);
-        players.put(TeamType.DEFENDERS, randomTeam ? teamB : teamA);
-        players.put(TeamType.SPECTATORS, teamSpectator);
+        teams.put(TeamType.ATTACKERS, randomTeam ? teamA : teamB);
+        teams.put(TeamType.DEFENDERS, randomTeam ? teamB : teamA);
+        teams.put(TeamType.SPECTATORS, teamSpectator);
     }
 
     public void initTeam(Scoreboard scoreboard) {
@@ -41,7 +42,7 @@ public class TeamManager {
     }
 
     public boolean containsPlayer(Player player) {
-        for (GameTeam team : players.values()) {
+        for (GameTeam team : teams.values()) {
             if (team.containsPlayer(player)) {
                 return true;
             }
@@ -70,17 +71,17 @@ public class TeamManager {
 
 
         gamePlayer.setTeam(team);
-        players.get(team).addPlayer(gamePlayer);
+        teams.get(team).addPlayer(gamePlayer);
     }
 
     public GameTeam getTeam(TeamType type) {
         if (type == TeamType.NONE) return null;
 
-        return players.get(type);
+        return teams.get(type);
     }
 
     public Pair<TeamType, GameTeam> getTeam(Player player) {
-        for (Map.Entry<TeamType, GameTeam> entry : players.entrySet()) {
+        for (Map.Entry<TeamType, GameTeam> entry : teams.entrySet()) {
             if (entry.getValue().containsPlayer(player)) {
                 return Pair.of(entry.getKey(), entry.getValue());
             }

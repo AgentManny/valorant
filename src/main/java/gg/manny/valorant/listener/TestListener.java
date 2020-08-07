@@ -5,15 +5,15 @@ import joptsimple.internal.Strings;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import xyz.xenondevs.particle.ParticleEffect;
 
@@ -28,14 +28,14 @@ public class TestListener implements Listener {
     public static ParticleEffect RECON_PARTICLE = ParticleEffect.REDSTONE;
     public static Color RECON_COLOR = Color.ORANGE;
     public static int RECON_RADIUS = 25;
-    public static long RECON_TIME = TimeUnit.SECONDS.toMillis(30);
+    public static long RECON_TIME = TimeUnit.SECONDS.toMillis(10);
 
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
-            event.getPlayer().launchProjectile(Arrow.class);
-        }
+//        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+//            event.getPlayer().launchProjectile(Arrow.class);
+//        }
     }
 
     @EventHandler
@@ -43,20 +43,10 @@ public class TestListener implements Listener {
         Projectile entity = event.getEntity();
         if (entity instanceof Egg) {
             boolean floor = event.getHitEntity() != null || event.getHitBlockFace() == BlockFace.UP; // Radius changes if floor - WALL inital shape is a rectangle
-            int bounces = 0;
 
             if (floor) {
-
                 final double[] count = {1};
-
-
                 Location centerLoc = entity.getLocation();
-                RayTraceResult rayTraceResult = centerLoc.getWorld().rayTraceEntities(centerLoc, centerLoc.getDirection(), RECON_RADIUS, RECON_RADIUS * 10);
-                Entity hitEntity = rayTraceResult.getHitEntity();
-                if (hitEntity != null && entity instanceof Player) {
-                    hitEntity.sendMessage(ChatColor.RED + "You were revealed by a Recon Dart prolly");
-                }
-
                 World world = centerLoc.getWorld();
                 double locX = centerLoc.getX();
                 double locY = centerLoc.getY();
@@ -190,7 +180,7 @@ public class TestListener implements Listener {
                 return false;
             }
             /*Spawn the particle at the point*/
-          //  ParticleEffect.REDSTONE.display(p1.toLocation(world), location.getBlock().isPassable() ? Color.RED : Color.GREEN);
+          ParticleEffect.REDSTONE.display(p1.toLocation(world), location.getBlock().isPassable() ? Color.RED : Color.GREEN);
 
             /* We add the space covered */
             covered += space;

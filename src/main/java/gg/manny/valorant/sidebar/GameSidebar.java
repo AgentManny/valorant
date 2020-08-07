@@ -50,11 +50,12 @@ public class GameSidebar implements ScoreboardAdapter {
         lines.add(" ");
 
         if (player.hasMetadata("debug")) {
-            GameMap locatedMap = mapManager.getMapByLocation(player.getLocation());
-            lines.add(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Debug mode");
+            GameMap locatedMap = mapManager.getMapByName("Haven");
+            lines.add(ChatColor.GRAY.toString() + ChatColor.ITALIC + "[Developer Mode]");
             lines.add("Map: " + ChatColor.RED + (locatedMap == null ? "None" : locatedMap.getName()));
-            lines.add("Callout: " + ChatColor.RED + (locatedMap == null ? "None" : locatedMap.getCalloutByLocation(player.getLocation())));
-            return;
+            lines.add("Author: " + ChatColor.RED + (locatedMap == null ? "None" : locatedMap.getAuthor()));
+            String callout;
+            lines.add("Callout: " + ChatColor.RED + (locatedMap != null && (callout = locatedMap.getCalloutByLocation(player.getLocation())) != null ? callout : ChatColor.GRAY + "???"));
         } else if (game.getState() == GameState.WAITING || game.getState() == GameState.STARTING) {
             lines.add(ChatColor.WHITE + "Players: " + ChatColor.RED + Bukkit.getOnlinePlayers().size() + "/" + GameLobby.REQUIRED_PLAYERS);
             if (game.getState() == GameState.STARTING) {

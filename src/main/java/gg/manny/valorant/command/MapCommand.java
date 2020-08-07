@@ -17,6 +17,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.StringJoiner;
+
 @RequiredArgsConstructor
 public class MapCommand implements CommandExecutor {
 
@@ -32,12 +34,13 @@ public class MapCommand implements CommandExecutor {
         if (args.length == 0) {
             sender.sendMessage(Locale.SYSTEM_PREFIX + "Map commands:");
             sender.sendMessage(new String[] {
+                    "/map author <map> <name>",
                     "/map create <name>",
                     "/map setdescription <name> [description...]",
                     "/map info <name>",
                     "/map remove <name>",
                     "/map list",
-                    "/map location <map> <list|add|remove>"
+                    "/map locations <map> <list|add|remove>"
             });
             return true;
         }
@@ -58,6 +61,7 @@ public class MapCommand implements CommandExecutor {
 
             sender.sendMessage(Locale.SYSTEM_PREFIX + "Created " + ChatColor.LIGHT_PURPLE + name + ChatColor.RESET + " map.");
             mapManager.getMaps().add(new GameMap(name));
+            mapManager.save();
         } else if (args[0].equalsIgnoreCase("list")) {
             if (mapManager.getMaps().isEmpty()) {
                 sender.sendMessage(ChatColor.RED + "There aren't any maps created.");
@@ -80,16 +84,37 @@ public class MapCommand implements CommandExecutor {
                 return true;
             }
 
-            sender.sendMessage(Locale.SYSTEM_PREFIX + "Removed"  + map.getName() + ".");
-        } else if (args[0].equalsIgnoreCase("location")) {
-            if (args.length == 1) {
-                sender.sendMessage(ChatColor.RED + "Usage: /map location <map> <list|add|remove>");
+            sender.sendMessage(Locale.SYSTEM_PREFIX + "Removed "  + map.getName() + " map.");
+            mapManager.remove(map);
+        } else if (args[0].equalsIgnoreCase("author")) {
+            if (args.length < 2) {
+                sender.sendMessage(ChatColor.RED + "Usage: /map author <map> <name>");
                 return true;
             }
 
             GameMap map = mapManager.getMapByName(args[1]);
             if (map == null) {
                 sender.sendMessage(Locale.SYSTEM_PREFIX + "Map " + args[1] + " not found.");
+                return true;
+            }
+
+            StringJoiner joiner = new StringJoiner(" ");
+            for (int i = 2; i < args.length; i++) {
+                joiner.add(args[i]);
+            }
+
+            map.setAuthor(joiner.toString());
+            map.save();
+            sender.sendMessage(Locale.SYSTEM_PREFIX + "Author set to " + ChatColor.LIGHT_PURPLE + map.getAuthor() + ChatColor.RESET + " for " + map.getName() + " map.");
+        } else if (args[0].equalsIgnoreCase("callout")) {
+            if (args.length < 3) {
+                sender.sendMessage(ChatColor.RED + "Usage: /map callout <add|remove> <map> <callout...>");
+                return true;
+            }
+
+            GameMap map = mapManager.getMapByName(args[2]);
+            if (map == null) {
+                sender.sendMessage(Locale.SYSTEM_PREFIX + "Map " + args[2] + " not found.");
                 return true;
             }
 
@@ -106,12 +131,17 @@ public class MapCommand implements CommandExecutor {
                     location.getPoints().forEach(point -> sender.sendMessage(ChatColor.GRAY + " - (" + point.getX() + ", " + point.getZ() + ")"));
                 });
             } else if ((adding = args[1].equalsIgnoreCase("add")) || args[1].equalsIgnoreCase("remove")) {
-                if (args.length == 2) {
-                    sender.sendMessage(ChatColor.RED + "Usage: /map location <map> <add|remove> <callout>");
+                if (args.length < 4) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /map callout <add|remove> <map> <callout>");
                     return true;
                 }
 
-                String callout = args[2];
+                StringJoiner joiner = new StringJoiner(" ");
+                for (int i = 3; i < args.length; i++) {
+                    joiner.add(args[i]);
+                }
+                String callout = joiner.toString();
+
                 if (adding) {
                     if (map.getLocations().containsKey(callout)) {
                         sender.sendMessage(ChatColor.RED + "Callout " + callout + " already exists!");
@@ -132,7 +162,6 @@ public class MapCommand implements CommandExecutor {
                             sender.sendMessage(ChatColor.GRAY + "//sel poly - " + ChatColor.WHITE + "Left-click to select first point. All subsequent points are selected by right-clicking. Every right-click will add an additional point. The top and bottom will always encompass your highest and lowest selected points.");
                             return true;
                         }
-
                     } catch (IncompleteRegionException e) {
                         sender.sendMessage(ChatColor.RED + "You haven't selected a region!");
                         return true;
@@ -148,6 +177,8 @@ public class MapCommand implements CommandExecutor {
                     map.save();
                     return true;
                 }
+            } else {
+                sender.sendMessage(ChatColor.RED + "Usage: /map callout <add|remove> <map> <callout>");
             }
         }
         return true;

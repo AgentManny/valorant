@@ -1,5 +1,6 @@
 package gg.manny.valorant.map;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -32,7 +33,13 @@ public class MapManager {
             }
             for (File mapFile : maps) {
                 try (FileReader reader = new FileReader(mapFile)) {
-                    JsonObject jsonObject = new JsonParser().parse(reader).getAsJsonObject();
+                    JsonElement parse = new JsonParser().parse(reader);
+                    if (parse.isJsonNull()) {
+                        plugin.getLogger().severe("[Map] Failed to load " + mapFile.getName() + ": corrupted (null)");
+                        continue;
+                    }
+
+                    JsonObject jsonObject = parse.getAsJsonObject();
                     String name = jsonObject.get("name").getAsString();
                     plugin.getLogger().info("[Map] Loaded map " + name + ".");
                     this.maps.add(new GameMap(name, jsonObject));
@@ -56,6 +63,11 @@ public class MapManager {
         plugin.getLogger().info("[Map] Saving " + maps.size() + " maps...");
         maps.forEach(GameMap::save);
         plugin.getLogger().info("[Map] Saved " + maps.size() + " maps");
+    }
+
+    public void remove(GameMap map) {
+        map.getFile().delete();
+        maps.remove(map);
     }
 
     public GameMap getMapByName(String name) {
