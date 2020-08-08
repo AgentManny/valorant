@@ -2,6 +2,8 @@ package gg.manny.valorant.map;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -15,10 +17,7 @@ import org.bukkit.Location;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static gg.manny.valorant.map.MapManager.MAP_DIRECTORY;
 
@@ -56,10 +55,65 @@ public class GameMap {
         this.description = data.get("description").getAsString();
         this.author = data.get("author").getAsString();
 
-        if (data.has("locations") && data.get("locations").isJsonObject()) {
-            JsonObject locations = data.getAsJsonObject("locations");
+        if (data.has("orbs") && data.get("orbs").isJsonArray()) {
+            JsonArray orbs = data.getAsJsonArray("orbs");
+            orbs.forEach(entry -> this.orbs.add(Valorant.GSON.fromJson(entry, Location.class)));
+        }
+
+        if (data.has("spawn_points") && data.get("spawn_points").isJsonObject()) {
+            JsonObject spawnPoints = data.getAsJsonObject("spawn_points");
+            for (Map.Entry<String, JsonElement> entry : spawnPoints.entrySet()) {
+                TeamType team;
+                try {
+                    team = TeamType.valueOf(entry.getKey());
+                } catch (EnumConstantNotPresentException e) {
+                    throw new NullPointerException("Team " + entry.getKey() + " not found.");
+                }
+
+                if (entry.getValue().isJsonArray()) {
+                    JsonArray locations = entry.getValue().getAsJsonArray();
+                    locations.forEach(location -> this.spawnPoints.put(team, Valorant.GSON.fromJson(location, Location.class)));
+                }
+            }
+        }
+
+        if (data.has("plant_sites") && data.get("plant_sites").isJsonArray()) {
+            JsonArray plantSites = data.getAsJsonArray("plant_sites");
+            plantSites.forEach(entry -> this.plantSites.add(Valorant.GSON.fromJson(entry, CuboidRegion.class)));
+        }
+
+        if (data.has("callouts") && data.get("callouts").isJsonObject()) {
+            JsonObject locations = data.getAsJsonObject("callouts");
             locations.entrySet().forEach(entry -> this.callouts.put(entry.getKey(), Valorant.GSON.fromJson(entry.getValue(), Polygonal2DRegion.class)));
         }
+    }
+
+    private JsonObject getJson() {
+        JsonObject data = new JsonObject();
+        data.addProperty("name", name);
+        data.addProperty("author", author);
+        data.addProperty("description", description);
+
+        JsonArray orbs = new JsonArray();
+        this.orbs.forEach(location -> orbs.add(Valorant.GSON.toJsonTree(location)));
+        data.add("orbs", orbs);
+
+        JsonObject spawnPoints = new JsonObject();
+        for (Map.Entry<TeamType, Collection<Location>> entry : this.spawnPoints.asMap().entrySet()) {
+            JsonArray teamSpawnPoints = new JsonArray();
+            entry.getValue().forEach(location -> teamSpawnPoints.add(Valorant.GSON.toJsonTree(location)));
+            spawnPoints.add(entry.getKey().name(), teamSpawnPoints);
+        }
+        data.add("spawn_points", spawnPoints);
+
+        JsonArray plantSites = new JsonArray();
+        this.plantSites.forEach(cuboid -> plantSites.add(Valorant.GSON.toJsonTree(cuboid)));
+        data.add("plant_sites", plantSites);
+
+        JsonObject callouts = new JsonObject();
+        this.callouts.forEach((key, region) -> callouts.add(key, Valorant.GSON.toJsonTree(region)));
+        data.add("callouts", callouts);
+        return data;
     }
 
     public String getCalloutByLocation(Location location) {
@@ -89,18 +143,6 @@ public class GameMap {
 
         Valorant.getInstance().getLogger().info("[Map] Saved " + name);
         // Save to disk
-    }
-
-    private JsonObject getJson() {
-        JsonObject data = new JsonObject();
-        data.addProperty("name", name);
-        data.addProperty("author", author);
-        data.addProperty("description", description);
-
-        JsonObject locations = new JsonObject();
-        this.callouts.forEach((key, region) -> locations.add(key, Valorant.GSON.toJsonTree(region)));
-        data.add("locations", locations);
-        return data;
     }
 
     public File getFile() {
