@@ -1,8 +1,19 @@
 package gg.manny.valorant.util;
 
+import com.google.common.base.Strings;
+import org.bukkit.ChatColor;
+
 import java.text.DecimalFormat;
 
 public class MathUtil {
+
+    public static String getProgressBar(float progress, float max, int bars, char symbol) {
+        float percent = progress / max;
+        int progressBars = (int) (bars * percent);
+
+        return Strings.repeat("" + ChatColor.DARK_RED + symbol, progressBars)
+                + Strings.repeat("" + ChatColor.GRAY + symbol, bars - progressBars);
+    }
 
     /**
      * Round a number to two decimal points

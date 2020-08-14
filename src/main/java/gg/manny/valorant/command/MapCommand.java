@@ -10,6 +10,8 @@ import gg.manny.valorant.Locale;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.map.GameMap;
 import gg.manny.valorant.map.MapManager;
+import gg.manny.valorant.orb.Orb;
+import gg.manny.valorant.orb.OrbType;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -40,14 +42,23 @@ public class MapCommand implements CommandExecutor {
                     "/map info <name>",
                     "/map remove <name>",
                     "/map list",
-                    "/map locations <map> <list|add|remove>"
+                    "/map callouts <map> <list|add|remove>"
             });
             return true;
         }
 
         Player player = (Player) sender;
         MapManager mapManager = plugin.getMapManager();
-        if (args[0].equalsIgnoreCase("create")) {
+        if (args[0].equalsIgnoreCase("orb")) {
+            if (args.length < 2) {
+                sender.sendMessage(ChatColor.RED + "Usage: /map orb <map> <list|add|remove>");
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("add")) {
+                new Orb(OrbType.ULTIMATE_ABILITY, player.getLocation()).setActive(true);
+            }
+        } else if (args[0].equalsIgnoreCase("create")) {
             if (args.length == 1) {
                 sender.sendMessage(ChatColor.RED + "Usage: /map create <name>");
                 return true;
@@ -106,7 +117,7 @@ public class MapCommand implements CommandExecutor {
             map.setAuthor(joiner.toString());
             map.save();
             sender.sendMessage(Locale.SYSTEM_PREFIX + "Author set to " + ChatColor.LIGHT_PURPLE + map.getAuthor() + ChatColor.RESET + " for " + map.getName() + " map.");
-        } else if (args[0].equalsIgnoreCase("callout")) {
+        } else if (args[0].equalsIgnoreCase("callouts")) {
             if (args.length < 3) {
                 sender.sendMessage(ChatColor.RED + "Usage: /map callout <add|remove> <map> <callout...>");
                 return true;
@@ -120,13 +131,13 @@ public class MapCommand implements CommandExecutor {
 
             boolean adding;
             if (args[1].equalsIgnoreCase("list")) {
-                if (map.getLocations().isEmpty()) {
+                if (map.getCallouts().isEmpty()) {
                     sender.sendMessage(ChatColor.RED + "There aren't any locations set for " + map.getName() + ".");
                     return true;
                 }
 
                 sender.sendMessage(ChatColor.GREEN + "Registered locations for " + map.getName() + ":");
-                map.getLocations().forEach((name, location) -> {
+                map.getCallouts().forEach((name, location) -> {
                     sender.sendMessage(ChatColor.WHITE + name + ChatColor.GRAY + " (Height: " + location.getHeight() + ") (Width: " + location.getWidth() + ") (Area: " + location.getArea() + ")" + " (Y Min: " + location.getMinimumY() +") (Y Max:" + location.getMaximumY() + ")");
                     location.getPoints().forEach(point -> sender.sendMessage(ChatColor.GRAY + " - (" + point.getX() + ", " + point.getZ() + ")"));
                 });
@@ -143,7 +154,7 @@ public class MapCommand implements CommandExecutor {
                 String callout = joiner.toString();
 
                 if (adding) {
-                    if (map.getLocations().containsKey(callout)) {
+                    if (map.getCallouts().containsKey(callout)) {
                         sender.sendMessage(ChatColor.RED + "Callout " + callout + " already exists!");
                         return true;
                     }
@@ -155,7 +166,7 @@ public class MapCommand implements CommandExecutor {
                             Polygonal2DRegion polySelection = (Polygonal2DRegion) selection;
                             sender.sendMessage(Locale.SYSTEM_PREFIX + "Added callout " + ChatColor.LIGHT_PURPLE + callout + ChatColor.RESET + " for " + ChatColor.LIGHT_PURPLE + map.getName() + ChatColor.RESET + " map.");
                             polySelection.getPoints().forEach(point -> sender.sendMessage(ChatColor.GRAY + " - (" + point.getX() + ", " + point.getZ() + ")"));
-                            map.getLocations().put(callout, polySelection);
+                            map.getCallouts().put(callout, polySelection);
                             map.save();
                         } else {
                             sender.sendMessage(ChatColor.RED + "Regions must be polygons:");
@@ -167,13 +178,13 @@ public class MapCommand implements CommandExecutor {
                         return true;
                     }
                 } else {
-                    if (!map.getLocations().containsKey(callout)) {
+                    if (!map.getCallouts().containsKey(callout)) {
                         sender.sendMessage(ChatColor.RED + "Callout " + callout + " doesn't exist!");
                         return true;
                     }
 
                     sender.sendMessage(Locale.SYSTEM_PREFIX + "Removed callout " + ChatColor.LIGHT_PURPLE + callout + ChatColor.RESET + " for " + ChatColor.LIGHT_PURPLE + map.getName() + ChatColor.RESET + " map.");
-                    map.getLocations().remove(callout);
+                    map.getCallouts().remove(callout);
                     map.save();
                     return true;
                 }

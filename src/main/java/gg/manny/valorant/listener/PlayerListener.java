@@ -9,7 +9,6 @@ import gg.manny.valorant.team.GameTeam;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,17 +17,23 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.ipvp.ingot.HotbarApi;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 public class PlayerListener implements Listener {
 
     private final Valorant plugin;
 
+//    @EventHandler
+//    public void onToggleSprint(PlayerToggleSprintEvent event) {
+//        Player player = event.getPlayer();
+//        event.setCancelled(true);
+//        player.setWalkSpeed(event.isSprinting() ? 0.2f : 1f);
+//    }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
+        player.setWalkSpeed(0.2f);
+      
         Game game = plugin.getGame();
         GamePlayer gamePlayer = plugin.getPlayerManager().create(player.getUniqueId(), player.getName(), false);
         GameTeam team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());

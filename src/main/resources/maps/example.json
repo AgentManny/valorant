@@ -4,14 +4,20 @@
   "description": "An example map",
   "orbs": [
     {
-      "x": 0,
-      "y": 100,
-      "z": 0
+      "type": "ULTIMATE_POINT_ORB",
+      "location": {
+        "x": 0,
+        "y": 100,
+        "z": 0
+      }
     },
     {
-      "x": 10,
-      "y": 60,
-      "z": 10
+      "type": "ULTIMATE_POINT_ORB",
+      "location": {
+        "x": 10,
+        "y": 60,
+        "z": 10
+      }
     }
   ],
   "spawn_points": {

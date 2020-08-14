@@ -10,6 +10,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import gg.manny.valorant.Valorant;
 import gg.manny.valorant.game.TeamType;
+import gg.manny.valorant.orb.Orb;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -34,7 +35,7 @@ public class GameMap {
     @Setter private String description = "";
 
     /** Returns all locations of ultimate orbs */
-    private List<Location> orbs = new ArrayList<>();
+    private List<Orb> orbs = new ArrayList<>();
 
     /** Returns the spawn locations for both teams */
     private Multimap<TeamType, Location> spawnPoints = ArrayListMultimap.create();
@@ -57,7 +58,7 @@ public class GameMap {
 
         if (data.has("orbs") && data.get("orbs").isJsonArray()) {
             JsonArray orbs = data.getAsJsonArray("orbs");
-            orbs.forEach(entry -> this.orbs.add(Valorant.GSON.fromJson(entry, Location.class)));
+            orbs.forEach(entry -> this.orbs.add(new Orb(entry.getAsJsonObject())));
         }
 
         if (data.has("spawn_points") && data.get("spawn_points").isJsonObject()) {
@@ -95,7 +96,7 @@ public class GameMap {
         data.addProperty("description", description);
 
         JsonArray orbs = new JsonArray();
-        this.orbs.forEach(location -> orbs.add(Valorant.GSON.toJsonTree(location)));
+        this.orbs.forEach(orb -> orbs.add(orb.toJson()));
         data.add("orbs", orbs);
 
         JsonObject spawnPoints = new JsonObject();

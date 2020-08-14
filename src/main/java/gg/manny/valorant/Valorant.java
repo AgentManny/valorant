@@ -10,9 +10,11 @@ import gg.manny.valorant.command.MapCommand;
 import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
 import gg.manny.valorant.listener.AbilityListener;
+import gg.manny.valorant.listener.OrbListener;
 import gg.manny.valorant.listener.PlayerListener;
 import gg.manny.valorant.listener.TestListener;
 import gg.manny.valorant.map.MapManager;
+import gg.manny.valorant.orb.OrbManager;
 import gg.manny.valorant.player.PlayerManager;
 import gg.manny.valorant.sidebar.GameSidebar;
 import gg.manny.valorant.team.TeamManager;
@@ -56,6 +58,7 @@ public class Valorant extends JavaPlugin {
 
     private Game game;
     private GameLobby lobby;
+    private OrbManager orbManager;
     private AgentManager agentManager;
     private TeamManager teamManager;
     private PlayerManager playerManager;
@@ -69,6 +72,7 @@ public class Valorant extends JavaPlugin {
         game = new Game(this);
         lobby = new GameLobby(this);
 
+        orbManager = new OrbManager(this);
         agentManager = new AgentManager(this);
 
         teamManager = new TeamManager(this);
@@ -80,7 +84,8 @@ public class Valorant extends JavaPlugin {
                 new PlayerListener(this),
                 new AbilityListener(),
                 new TestListener(), // Debug for testing
-                new HotbarFunctionListener()
+                new HotbarFunctionListener(),
+                new OrbListener(orbManager)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         MScoreboardHandler.init(new GameSidebar(this));

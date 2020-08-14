@@ -3,10 +3,8 @@ package gg.manny.valorant.map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sk89q.worldedit.math.BlockVector3;
 import gg.manny.valorant.Valorant;
 import lombok.Getter;
-import org.bukkit.Location;
 
 import java.io.File;
 import java.io.FileReader;
@@ -73,15 +71,6 @@ public class MapManager {
     public GameMap getMapByName(String name) {
         for (GameMap map : maps) {
             if (map.getName().equalsIgnoreCase(name)) {
-                return map;
-            }
-        }
-        return null;
-    }
-
-    public GameMap getMapByLocation(Location location) {
-        for (GameMap map : maps) {
-            if (map.getLocations().entrySet().stream().anyMatch((entry) -> entry.getValue().contains(BlockVector3.at(location.getX(), location.getY(), location.getZ())))) {
                 return map;
             }
         }
