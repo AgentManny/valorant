@@ -32,8 +32,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        player.setWalkSpeed(0.2f);
-      
+        player.setWalkSpeed(0.3f);
+
         Game game = plugin.getGame();
         GamePlayer gamePlayer = plugin.getPlayerManager().create(player.getUniqueId(), player.getName(), false);
         GameTeam team = plugin.getTeamManager().getTeam(gamePlayer.getTeam());

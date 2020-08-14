@@ -1,5 +1,7 @@
 package gg.manny.valorant.util;
 
+import net.minecraft.server.v1_15_R1.AttributeModifier;
+import net.minecraft.server.v1_15_R1.EntityLiving;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -7,10 +9,35 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.UUID;
+
 public final class PlayerUtils {
+
+    private final static UUID SPRINTING_SPEED_BOOST_ID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
+    private final static double SPRINTING_SPEED = 0.30000001192092896D;
 
     // Static utility class -- cannot be created.
     private PlayerUtils() {
+    }
+
+    public static void setSprintSpeed(double speed) {
+        AttributeModifier sprintingSpeedBoost = new AttributeModifier(SPRINTING_SPEED_BOOST_ID, "Sprinting speed boost", speed, AttributeModifier.Operation.MULTIPLY_TOTAL)
+                .a(false);
+
+        try {
+            Field field = EntityLiving.class.getDeclaredField("c");
+            field.setAccessible(true); // private
+
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+            field.set(null, sprintingSpeedBoost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Player getDamager(EntityDamageByEntityEvent event) {

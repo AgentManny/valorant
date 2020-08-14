@@ -10,6 +10,8 @@ import gg.manny.valorant.game.GameState;
 import gg.manny.valorant.game.TeamType;
 import gg.manny.valorant.listener.TestListener;
 import gg.manny.valorant.team.GameTeam;
+import gg.manny.valorant.util.PlayerUtil;
+import gg.manny.valorant.util.PlayerUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -62,8 +64,8 @@ public class DebugCommand implements CommandExecutor {
             if (args.length == 1) return true;
 
             double speed = Double.parseDouble(args[1]);
-            TestListener.SPEED_REDUCER = speed;
-            sender.sendMessage(ChatColor.GREEN + "Speed set to " + speed + " for projectiles.");
+            PlayerUtils.setSprintSpeed(speed);
+            sender.sendMessage(ChatColor.GREEN + "Speed set to " + speed + " for Sprinting.");
         } else if (args[0].equalsIgnoreCase("effect")) {
             if (args.length == 1) return true;
 

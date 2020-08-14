@@ -9,15 +9,13 @@ import gg.manny.valorant.command.DebugCommand;
 import gg.manny.valorant.command.MapCommand;
 import gg.manny.valorant.game.Game;
 import gg.manny.valorant.game.GameLobby;
-import gg.manny.valorant.listener.AbilityListener;
-import gg.manny.valorant.listener.OrbListener;
-import gg.manny.valorant.listener.PlayerListener;
-import gg.manny.valorant.listener.TestListener;
+import gg.manny.valorant.listener.*;
 import gg.manny.valorant.map.MapManager;
 import gg.manny.valorant.orb.OrbManager;
 import gg.manny.valorant.player.PlayerManager;
 import gg.manny.valorant.sidebar.GameSidebar;
 import gg.manny.valorant.team.TeamManager;
+import gg.manny.valorant.util.PlayerUtils;
 import gg.manny.valorant.util.scoreboard.MScoreboardHandler;
 import gg.manny.valorant.util.serialization.CuboidRegionAdapter;
 import gg.manny.valorant.util.serialization.LocationAdapter;
@@ -77,6 +75,7 @@ public class Valorant extends JavaPlugin {
 
         teamManager = new TeamManager(this);
         playerManager = new PlayerManager(this);
+        PlayerUtils.setSprintSpeed(-0.215);
 
         registerCommands();
 
